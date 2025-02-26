@@ -146,5 +146,64 @@ export class PropertyController {
         .status(500)
         .json({ message: `Error fetching properties: ${err.message}` });
     }
-  }
+    }
+    
+    public async getProperty(req: Request, res: Response): Promise<void> {
+        try
+        {
+            // Getting property id from request parameters
+            const { id } = req.params;
+            
+            // THrow error if property id is not provided
+            if (!id)
+            {
+                res
+                    .status(400)
+                    .json({ message: "Property ID is required" });
+                return;
+            }
+
+            // Retrieving property by id
+            const property = await prisma.property.findUnique({
+                where: { id: Number(id) },
+                include: {
+                    location: true,
+                },
+            });
+
+            // Throw error if property is not found
+            if (!property)
+            {
+                res
+                    .status(404)
+                    .json({ message: "Property not found" });
+                return;
+            }
+
+            // Formatting property with coordinates
+            const coordinates: { coordinates: string }[] =
+                    await prisma.$queryRaw`SELECT ST_asText(coordinates) as coordinates from "Location" where id = ${property.location.id}`;
+            
+                  const geoJSON: any = wktToGeoJSON(coordinates[0]?.coordinates || "");
+                  const longitude = geoJSON.coordinates[0];
+                  const latitude = geoJSON.coordinates[1];
+            
+                  const propertyWithCoordinates = {
+                    ...property,
+                    location: {
+                      ...property.location,
+                      coordinates: {
+                        longitude,
+                        latitude,
+                      },
+                    },
+                  };
+                  res.json(propertyWithCoordinates);
+        } catch (err: any)
+        {
+            res
+                .status(500)
+                .json({ message: `Error retrieving property: ${err.message}` });
+        }
+    }
 }
