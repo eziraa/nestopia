@@ -72,5 +72,37 @@ export class TenantController {
                 message: `Error updating tenant ${error.message}`,
             });
         }
+  }
+  
+  public async getTenenant(req: Request, res: Response): Promise<void>{
+    try
+    {
+      // Getting tenant cognito id from request parameters
+      const { cognitoId } = req.params;
+      
+      // Throw error if cognito id is not provided
+      if (!cognitoId) {
+        res.status(400).json({ message: "Cognito ID is required" });
+        return;
+      }
+
+      //Getting tenant
+      const tenant = await prisma.tenant.findUnique({
+        where: {cognitoId}
+      })
+
+      // throw error if tenant is not found
+      if (!tenant)
+      {
+        res.status(404).json({ message: "Tenant not found" });
+        return;
+      }
+
+      // Sending response
+      res.status(200).json(tenant);
+      
+    } catch (err: any) {
+      res.status(500).json({ message: `Error retrieving tenant: ${err.message}` });
     }
+  }
 }
