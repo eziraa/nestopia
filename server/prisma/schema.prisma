@@ -1,0 +1,66 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["postgresqlExtensions"]
+}
+
+datasource db {
+  provider   = "postgresql"
+  url        = env("DATABASE_URL")
+  extensions = [postgis]
+}
+
+enum Highlight {
+  HighSpeedInternetAccess
+  WasherDryer
+  AirConditioning
+  Heating
+  SmokeFree
+  CableReady
+  SatelliteTV
+  DoubleVanities
+  TubShower
+  Intercom
+  SprinklerSystem
+  RecentlyRenovated
+  CloseToTransit
+  GreatView
+  QuietNeighborhood
+}
+
+enum Amenity {
+  WasherDryer
+  AirConditioning
+  Dishwasher
+  HighSpeedInternet
+  HardwoodFloors
+  WalkInClosets
+  Microwave
+  Refrigerator
+  Pool
+  Gym
+  Parking
+  PetsAllowed
+  WiFi
+}
+
+enum PropertyType {
+  Rooms
+  Tinyhouse
+  Apartment
+  Villa
+  Townhouse
+  Cottage
+}
+
+enum ApplicationStatus {
+  Pending
+  Denied
+  Approved
+}
+
+enum PaymentStatus {
+  Pending
+  Paid
+  PartiallyPaid
+  Overdue
+}
