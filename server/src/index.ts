@@ -14,7 +14,6 @@ import propertyRoutes from "./routes/propertyRoutes";
 import leaseRoutes from "./routes/leaseRoutes";
 import applicationRoutes from "./routes/applicationRoutes";
 import { Role } from "./enums/RoleEnums";
-import { AuthController } from "./controllers/auth.controller";
 
 /* CONFIGURATIONS */
 dotenv.config();
@@ -34,17 +33,18 @@ app.use(
     cookie: { secure: false },
   })
 );
+
 /* ROUTES */
-app.get("/", (req, res) => {
+app.get("/api/", (req, res) => {
   res.send("This is home route");
 });
 
-app.use("/auth", authrouter);
-app.use("/applications", applicationRoutes);
-app.use("/properties", propertyRoutes);
-app.use("/leases", leaseRoutes);
-app.use("/tenants", authMiddleware([Role.TENANT]), tenantRoutes);
-app.use("/managers", authMiddleware([Role.MANAGER]), managerRoutes);
+app.use("/api/auth", authrouter);
+app.use("/api/applications", applicationRoutes);
+app.use("/api/properties", propertyRoutes);
+app.use("/api/leases", leaseRoutes);
+app.use("/api/tenants", authMiddleware([Role.TENANT]), tenantRoutes);
+app.use("/api/managers", authMiddleware([Role.MANAGER]), managerRoutes);
 
 /* SERVER */
 const port = Number(process.env.PORT) || 3002;
