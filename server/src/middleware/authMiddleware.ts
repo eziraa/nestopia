@@ -13,7 +13,8 @@ interface User {
   password?: string;
   name?: string;
   email?: string;
-  confirmPassword?: string;
+  confirmpassword?: string;
+  phoneNumber?: string;
 }
 
 declare global {
