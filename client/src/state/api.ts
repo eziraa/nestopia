@@ -76,7 +76,20 @@ export const api = createApi({
         });
       },
     }),
+    getTenant: build.query<Tenant, string>({
+      query: (cognitoId) => `tenants/${cognitoId}`,
+      providesTags: (result) => [{ type: ApiTags.TENANTS, id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load tenant profile.",
+        });
+      },
+    }),
   }),
 });
 
-export const { useUpdateTenantSettingsMutation, useGetPropertiesQuery } = api;
+export const {
+  useUpdateTenantSettingsMutation,
+  useGetPropertiesQuery,
+  useGetTenantQuery,
+} = api;
