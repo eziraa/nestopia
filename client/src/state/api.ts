@@ -1,5 +1,5 @@
 import { cleanParams, withToast } from "@/lib/utils";
-import { Property, Tenant } from "@/types/prismaTypes";
+import { Manager, Property, Tenant } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersState } from ".";
 
@@ -30,6 +30,23 @@ export const api = createApi({
         body: updatedTenant,
       }),
       invalidatesTags: (result) => [{ type: ApiTags.TENANTS, id: result?.id }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Settings updated successfully!",
+          error: "Failed to update settings.",
+        });
+      },
+    }),
+    updateManagerSettings: build.mutation<
+      Manager,
+      { cognitoId: string } & Partial<Manager>
+    >({
+      query: ({ cognitoId, ...updatedManager }) => ({
+        url: `managers/${cognitoId}`,
+        method: "PUT",
+        body: updatedManager,
+      }),
+      invalidatesTags: (result) => [{ type: ApiTags.MANAGERS, id: result?.id }],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           success: "Settings updated successfully!",
@@ -90,6 +107,7 @@ export const api = createApi({
 
 export const {
   useUpdateTenantSettingsMutation,
+  useUpdateManagerSettingsMutation,
   useGetPropertiesQuery,
   useGetTenantQuery,
 } = api;
