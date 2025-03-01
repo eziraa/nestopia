@@ -8,11 +8,11 @@ import session from "express-session";
 import { authMiddleware } from "./middleware/authMiddleware";
 /* ROUTE IMPORT */
 import authrouter from "./routes/auth.route";
-import tenantRoutes from "./routes/tenantRoutes";
-import managerRoutes from "./routes/managerRoutes";
-import propertyRoutes from "./routes/propertyRoutes";
-import leaseRoutes from "./routes/leaseRoutes";
-import applicationRoutes from "./routes/applicationRoutes";
+import tenantRoutes from "./routes/tenant.route";
+import managerRoutes from "./routes/manager.route";
+import propertyRoutes from "./routes/property.route";
+import leaseRoutes from "./routes/lease.route.";
+import applicationRoutes from "./routes/applications.route";
 import { Role } from "./enums/RoleEnums";
 
 /* CONFIGURATIONS */
