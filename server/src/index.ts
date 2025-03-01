@@ -20,23 +20,40 @@ dotenv.config();
 const app = express();
 app.use(express.json());
 app.use(helmet());
-app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" }));
+app.use(helmet.crossOriginResourcePolicy({ policy: "cross-origin" })); // Keep this if you want to enforce a cross-origin policy
+
+// Configure Referrer-Policy header manually to allow for cross-origin
+app.use((req, res, next) => {
+  res.setHeader("Referrer-Policy", "no-referrer-when-downgrade");
+  next();
+});
+
 app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cors());
+
+/* CORS CONFIGURATION */
+app.use(
+  cors({
+    origin: "http://localhost:3000", // Allow your frontend to make requests
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Allow cookies/authorization headers to be sent with requests
+  })
+);
+
+// Session configuration
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "secret_key90nfi2",
     resave: false,
     saveUninitialized: true,
-    cookie: { secure: false },
+    cookie: { secure: process.env.NODE_ENV === "production" }, // Secure cookies in production
   })
 );
 
 /* ROUTES */
 app.get("/api/", (req, res) => {
-  res.send("This is home route");
+  res.send("This is the home route");
 });
 
 app.use("/api/auth", authrouter);

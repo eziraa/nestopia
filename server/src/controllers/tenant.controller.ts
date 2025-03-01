@@ -4,7 +4,7 @@ import { ICTenant } from "../types/tenantTypes";
 import { wktToGeoJSON } from "@terraformer/wkt";
 const prisma = new PrismaClient();
 export class TenantController {
-  public async listTetents(req: Request, res: Response): Promise<void> {
+  static async listTetents(req: Request, res: Response): Promise<void> {
     try {
       // Getting tenants
       const tenants = await prisma.tenant.findMany({
@@ -23,18 +23,20 @@ export class TenantController {
     }
   }
 
-  public async createTenant(req: Request, res: Response): Promise<void> {
+  static async createTenant(req: Request, res: Response): Promise<void> {
     try {
       // Getting tenant data
-      const { cognitoId, name, email, phoneNumber } = req.body as ICTenant;
+      const { id, name, email, phoneNumber } = req.body as ICTenant;
 
       // Creating tenant
       const tenant = await prisma.tenant.create({
         data: {
-          cognitoId,
+          cognitoId: id,
+          id: Number(id),
           name,
           email,
           phoneNumber,
+          password: "password",
         },
       });
 
@@ -47,16 +49,16 @@ export class TenantController {
     }
   }
 
-  public async updateTenant(req: Request, res: Response): Promise<void> {
+  static async updateTenant(req: Request, res: Response): Promise<void> {
     try {
       // Getting tenant cognito id from request parameters
-      const { cognitoId } = req.params;
+      const { id } = req.params;
       // Getting tenant data
       const { name, email, phoneNumber } = req.body as ICTenant;
 
       // Updating tenant
       const updatedTenant = await prisma.tenant.update({
-        where: { cognitoId },
+        where: { id: Number(id) },
         data: {
           name,
           email,
@@ -73,20 +75,20 @@ export class TenantController {
     }
   }
 
-  public async getTenenant(req: Request, res: Response): Promise<void> {
+  static async getTenenant(req: Request, res: Response): Promise<void> {
     try {
       // Getting tenant cognito id from request parameters
-      const { cognitoId } = req.params;
+      const { id } = req.params;
 
       // Throw error if cognito id is not provided
-      if (!cognitoId) {
+      if (!id) {
         res.status(400).json({ message: "Cognito ID is required" });
         return;
       }
 
       //Getting tenant
       const tenant = await prisma.tenant.findUnique({
-        where: { cognitoId },
+        where: { id: Number(id) },
       });
 
       // throw error if tenant is not found
@@ -104,23 +106,23 @@ export class TenantController {
     }
   }
 
-  public async getCurrentResidences(
+  static async getCurrentResidences(
     req: Request,
     res: Response
   ): Promise<void> {
     try {
       // Getting tenant cognito id from request parameters
-      const { cognitoId } = req.params;
+      const { id } = req.params;
 
       // Throw error if cognito id is not provided
-      if (!cognitoId) {
+      if (!id) {
         res.status(400).json({ message: "Cognito ID is required" });
         return;
       }
 
       // Getting properties by tenant cognito id
       const properties = await prisma.property.findMany({
-        where: { tenants: { some: { cognitoId } } },
+        where: { tenants: { some: { id: Number(id) } } },
         include: {
           location: true,
         },

@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
 import { Role } from "../enums/RoleEnums";
+import { getRandomValues } from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -14,14 +15,23 @@ export class AuthController {
       if (!(await AuthController.validateSignup(req, res))) {
         return;
       }
-      const { name, email, password, confirmPassword } = req.body;
+      const { name, email, password, phoneNumber, role } = req.body;
 
+      let existingUser;
       // Check if user already exists
-      const existingUser = await prisma.user.findFirst({
-        where: {
-          email: email,
-        },
-      });
+      if (role === Role.MANAGER)
+        existingUser = await prisma.manager.findFirst({
+          where: {
+            email: email,
+          },
+        });
+      else {
+        existingUser = await prisma.tenant.findFirst({
+          where: {
+            email: email,
+          },
+        });
+      }
       if (existingUser) {
         res.status(400).json({ message: "User already exists" });
       }
@@ -29,15 +39,39 @@ export class AuthController {
       // Hash the password
       const hashedPassword = await bcrypt.hash(password, 10);
 
-      // Create user in DB
-      const user = await prisma.user.create({
-        data: { name, email, password: hashedPassword },
-      });
+      let newUser;
+      if (role === Role.MANAGER) {
+        newUser = await prisma.manager.create({
+          data: {
+            cognitoId: crypto.randomUUID(),
+            name,
+            email,
+            phoneNumber,
+            password: hashedPassword,
+          },
+        });
+      } else {
+        newUser = await prisma.tenant.create({
+          data: {
+            cognitoId: crypto.randomUUID(),
+            name,
+            email,
+            phoneNumber,
+            password: hashedPassword,
+          },
+        });
+      }
 
       // Save user ID in session (if using sessions)
-      req.user = { id: user.id.toString(), email: user.email, role: Role.NONE };
+      req.user = {
+        id: newUser.id.toString(),
+        email: newUser.email,
+        role: role || Role.TENANT,
+      };
 
-      res.status(201).json({ message: "User registered successfully", user });
+      res
+        .status(201)
+        .json({ message: "User registered successfully", newUser });
     } catch (error) {
       console.error("Signup Error:", error);
       res.status(500).json({ message: "Internal Server Error" });
@@ -59,14 +93,14 @@ export class AuthController {
       }
 
       // Find user by email
-      const user = await prisma.user.findFirst({ where: { email } });
+      const user = await prisma.manager.findFirst({ where: { email } });
       if (!user) {
         res.status(401).json({ message: "Invalid credentials" });
         return;
       }
 
       // Compare password
-      const isMatch = await bcrypt.compare(password, user.password);
+      const isMatch = await bcrypt.compare(password, user.password || "password");
       if (!isMatch) {
         res.status(401).json({ message: "Invalid credentials" });
       }
@@ -74,7 +108,14 @@ export class AuthController {
       // Store user in session (or generate JWT)
       req.user = { id: user.id.toString(), role: Role.NONE, email: user.email };
 
-      res.json({ message: "Login successful", user });
+      res.json({
+        message: "Login successful",
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+        },
+      });
     } catch (error: any) {
       console.error("Signin Error:", error);
       // Handle known Prisma errors
@@ -84,6 +125,34 @@ export class AuthController {
         });
       } else res.status(500).json({ message: "Internal Server Error" });
     }
+  }
+
+  /**
+   * Get current user
+   */
+  static async getCurrUser(req: Request, res: Response) {
+    if (!req.user) {
+      res.status(401).json({ message: "Unauthorized" });
+      return;
+    }
+    try {
+      // Get tenant or manager by user ID
+      const tenant = await prisma.tenant.findFirst({
+        where: { email: req.user.email },
+      });
+      const manager = await prisma.manager.findFirst({
+        where: { email: req.user.email },
+      });
+      if (tenant) {
+        req.user.role = Role.TENANT;
+      }
+      if (manager) {
+        req.user.role = Role.MANAGER;
+      }
+    } catch (err) {
+      res.status(500).json({ message: "Failed to current user" });
+    }
+    res.json({ user: req.user });
   }
 
   /**

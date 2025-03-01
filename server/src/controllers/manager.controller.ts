@@ -4,13 +4,13 @@ import { wktToGeoJSON } from "@terraformer/wkt";
 
 const prisma = new PrismaClient();
 export class ManagerController {
-  public async getManager(req: Request, res: Response): Promise<void> {
+  static async getManager(req: Request, res: Response): Promise<void> {
     try {
       // Getting manager id
-      const { cognitoId } = req.params;
+      const { id } = req.params;
 
       // Throw error if manager id not provided
-      if (!cognitoId) {
+      if (!id) {
         res.status(200).json({
           message: "Manager ID required",
         });
@@ -19,7 +19,7 @@ export class ManagerController {
       // Getting manager
       const manager = await prisma.manager.findUnique({
         where: {
-          cognitoId,
+          id: Number(id),
         },
       });
 
@@ -39,19 +39,21 @@ export class ManagerController {
     }
   }
 
-  public async createManager(req: Request, res: Response): Promise<void> {
+  static async createManager(req: Request, res: Response): Promise<void> {
     try {
       // Getting manager data
-      const { cognitoId, name, email, phoneNumber } = req.body;
+      const { id, name, email, phoneNumber } = req.body;
 
       // Creating manager
 
       const manager = await prisma.manager.create({
         data: {
-          cognitoId,
+          id,
+          cognitoId: id,
           name,
           email,
           phoneNumber,
+          password: "password",
         },
       });
 
@@ -63,13 +65,13 @@ export class ManagerController {
     }
   }
 
-  public async updateManager(req: Request, res: Response): Promise<void> {
+  static async updateManager(req: Request, res: Response): Promise<void> {
     try {
-      const { cognitoId } = req.params;
+      const { id } = req.params;
       const { name, email, phoneNumber } = req.body;
 
       const updateManager = await prisma.manager.update({
-        where: { cognitoId },
+        where: { id: Number(id) },
         data: {
           name,
           email,

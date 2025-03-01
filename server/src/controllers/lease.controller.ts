@@ -4,7 +4,7 @@ import { PrismaClient } from "@prisma/client";
 const prisma = new PrismaClient();
 
 export class LeaseController {
-  public async listLeases(req: Request, res: Response): Promise<void> {
+  static async listLeases(req: Request, res: Response): Promise<void> {
     try {
       const leases = await prisma.lease.findMany({
         include: {
@@ -21,7 +21,7 @@ export class LeaseController {
     }
   }
 
-  public async getLeasePayments(req: Request, res: Response): Promise<void> {
+  static async getLeasePayments(req: Request, res: Response): Promise<void> {
     try {
       const { id } = req.params;
       const payments = await prisma.payment.findMany({
