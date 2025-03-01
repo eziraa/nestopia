@@ -103,6 +103,7 @@ model Manager {
   phoneNumber String
 
   managedProperties Property[]
+  password         String?
 }
 
 model Tenant {
@@ -116,6 +117,7 @@ model Tenant {
   favorites    Property[]    @relation("TenantFavorites")
   applications Application[]
   leases       Lease[]
+  password     String?
 }
 
 model Location {
