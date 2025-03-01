@@ -102,6 +102,35 @@ export const api = createApi({
         });
       },
     }),
+    getProperty: build.query<Property, number>({
+      query: (id) => `properties/${id}`,
+      providesTags: (result, error, id) => [
+        { type: ApiTags.PROPERTY_DETAILES, id },
+      ],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load property details.",
+        });
+      },
+    }),
+    getManagerProperties: build.query<Property[], string>({
+      query: (cognitoId) => `managers/${cognitoId}/properties`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: ApiTags.PROPERTIES as const,
+                id,
+              })),
+              { type: ApiTags.PROPERTIES, id: "LIST" },
+            ]
+          : [{ type: ApiTags.PROPERTIES, id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to load manager profile.",
+        });
+      },
+    }),
   }),
 });
 
@@ -110,4 +139,6 @@ export const {
   useUpdateManagerSettingsMutation,
   useGetPropertiesQuery,
   useGetTenantQuery,
+  useGetManagerPropertiesQuery,
+  useGetPropertyQuery,
 } = api;
