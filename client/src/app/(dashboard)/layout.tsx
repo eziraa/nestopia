@@ -45,7 +45,7 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
         <Navbar />
         <div style={{ marginTop: `${NAVBAR_HEIGHT}px` }}>
           <main className="flex">
-            <Sidebar userType={user.role} />
+            <Sidebar role={user.role} />
             <div className="flex-grow transition-all duration-300">
               {children}
             </div>
