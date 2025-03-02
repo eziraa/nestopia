@@ -41,16 +41,6 @@ app.use(
   })
 );
 
-// Session configuration
-app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "secret_key90nfi2",
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: process.env.NODE_ENV === "production" }, // Secure cookies in production
-  })
-);
-
 /* ROUTES */
 app.get("/api/", (req, res) => {
   res.send("This is the home route");

@@ -101,7 +101,7 @@ model Manager {
   name        String
   email       String
   phoneNumber String
-
+  role        String?
   managedProperties Property[]
   password         String?
 }
@@ -112,7 +112,7 @@ model Tenant {
   name        String
   email       String
   phoneNumber String
-
+  role      String?
   properties   Property[]    @relation("TenantProperties")
   favorites    Property[]    @relation("TenantFavorites")
   applications Application[]

@@ -140,6 +140,7 @@ declare global {
     email: string;
     role: Role;
     phoneNumber: string;
+    cognitoId: string;
   }
 }
 
