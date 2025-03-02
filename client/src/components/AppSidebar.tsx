@@ -21,7 +21,10 @@ import {
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import { cn } from "@/lib/utils";
 import Link from "next/link";
-
+enum Role {
+  Manager = "manager",
+  Tenant = "tenant",
+}
 const AppSidebar = ({ role }: AppSidebarProps) => {
   const pathname = usePathname();
   const { toggleSidebar, open } = useSidebar();
