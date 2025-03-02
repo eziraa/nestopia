@@ -6,7 +6,7 @@ import { ICApplication } from "../types/application";
 const prisma = new PrismaClient();
 
 export class ApplicationController {
- static async listApplications(req: Request, res: Response): Promise<void> {
+  static async listApplications(req: Request, res: Response): Promise<void> {
     try {
       //getting query parameteres
       const { userId, role } = req.query as { userId: string; role: Role };
@@ -16,20 +16,20 @@ export class ApplicationController {
       if (userId && role) {
         if (role === Role.TENANT) {
           whereClause = {
-            tenantId: String(userId),
+            tenantCognitoId: String(userId),
           };
         }
       } else if (role === Role.MANAGER) {
         whereClause = {
           property: {
-            managerid: String(userId),
+            managerCognitoId: String(userId),
           },
         };
       }
 
       //getting applications
       const application = await prisma.application.findMany({
-        where: whereClause,
+        where: {},
         include: {
           property: {
             include: {
@@ -45,11 +45,20 @@ export class ApplicationController {
 
       const formattedApplications = await Promise.all(
         application.map(async (app) => {
+          if (!app.tenantCognitoId) {
+            return {
+              ...app,
+              property: {
+                ...app.property,
+                address: app.property.location.address,
+              },
+              manager: app.property.manager,
+              lease: null,
+            };
+          }
           const lease = await prisma.lease.findFirst({
             where: {
-              tenant: {
-                id: Number(app.tenantCognitoId),
-              },
+              tenantCognitoId: app.tenantCognitoId,
               propertyId: app.propertyId,
             },
             orderBy: { startDate: "asc" },
@@ -83,7 +92,7 @@ export class ApplicationController {
     }
   }
 
- static async createApplication(req: Request, res: Response): Promise<void> {
+  static async createApplication(req: Request, res: Response): Promise<void> {
     try {
       //getting application details
       const {
@@ -173,7 +182,10 @@ export class ApplicationController {
     }
   }
 
- static async updateApplicationStatus(req: Request, res: Response): Promise<void> {
+  static async updateApplicationStatus(
+    req: Request,
+    res: Response
+  ): Promise<void> {
     try {
       // Getting appplication id from request parameters
       const { id } = req.params;
