@@ -1,5 +1,5 @@
 import { cleanParams, withToast } from "@/lib/utils";
-import { Manager, Property, Tenant } from "@/types/prismaTypes";
+import { Application, Manager, Property, Tenant } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersState } from ".";
 
@@ -170,6 +170,39 @@ export const api = createApi({
         });
       },
     }),
+    createApplication: build.mutation<Application, Partial<Application>>({
+      query: (body) => ({
+        url: `applications`,
+        method: "POST",
+        body: body,
+      }),
+      invalidatesTags: [ApiTags.APPLICATIONS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          success: "Application created successfully!",
+          error: "Failed to create applications.",
+        });
+      },
+    }),
+
+    getCurrentResidences: build.query<Property[], string>({
+      query: (cognitoId) => `tenants/${cognitoId}/current-residences`,
+      providesTags: (result) =>
+        result
+          ? [
+              ...result.map(({ id }) => ({
+                type: ApiTags.PROPERTIES as const,
+                id,
+              })),
+              { type: ApiTags.PROPERTIES, id: "LIST" },
+            ]
+          : [{ type: ApiTags.PROPERTIES, id: "LIST" }],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch current residences.",
+        });
+      },
+    }),
   }),
 });
 
@@ -180,4 +213,8 @@ export const {
   useGetTenantQuery,
   useGetManagerPropertiesQuery,
   useGetPropertyQuery,
+  useAddFavoritePropertyMutation,
+  useRemoveFavoritePropertyMutation,
+  useCreateApplicationMutation,
+  useGetCurrentResidencesQuery,
 } = api;
