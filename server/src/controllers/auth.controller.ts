@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 import bcrypt from "bcrypt";
 import { PrismaClient } from "@prisma/client";
+import jwt from "jsonwebtoken";
 import { Role } from "../enums/RoleEnums";
-import { getRandomValues } from "crypto";
 
 const prisma = new PrismaClient();
 
@@ -34,6 +34,7 @@ export class AuthController {
       }
       if (existingUser) {
         res.status(400).json({ message: "User already exists" });
+        return;
       }
 
       // Hash the password
@@ -48,6 +49,7 @@ export class AuthController {
             email,
             phoneNumber,
             password: hashedPassword,
+            role: Role.MANAGER,
           },
         });
       } else {
@@ -67,11 +69,14 @@ export class AuthController {
         id: newUser.id.toString(),
         email: newUser.email,
         role: role || Role.TENANT,
+        name: newUser.name,
+        phoneNumber: newUser.phoneNumber,
       };
 
       res
         .status(201)
         .json({ message: "User registered successfully", newUser });
+      return;
     } catch (error) {
       console.error("Signup Error:", error);
       res.status(500).json({ message: "Internal Server Error" });
@@ -93,17 +98,64 @@ export class AuthController {
       }
 
       // Find user by email
-      const user = await prisma.manager.findFirst({ where: { email } });
+      let role = Role.MANAGER;
+      const hashedPassword = await bcrypt.hash(password, 10);
+      let user = await prisma.manager.findFirst({ where: { email } });
       if (!user) {
-        res.status(401).json({ message: "Invalid credentials" });
+        user = await prisma.tenant.findFirst({ where: { email } });
+        role = Role.TENANT;
+        if (password === user?.password) {
+          user = await prisma.tenant.update({
+            where: { id: user?.id },
+            data: { password: hashedPassword },
+          });
+        }
+      } else {
+        if (password === user?.password) {
+          user = await prisma.manager.update({
+            where: { id: user?.id },
+            data: { password: hashedPassword },
+          });
+        }
+      }
+      if (!user) {
+        res.status(404).json({ message: "User not found" });
         return;
       }
 
       // Compare password
-      const isMatch = await bcrypt.compare(password, user.password || "password");
+      const isMatch = await bcrypt.compare(
+        password,
+        user.password || "password"
+      );
       if (!isMatch) {
         res.status(401).json({ message: "Invalid credentials" });
+        return;
       }
+
+      // Generate JWT token
+      if (!process.env.JWT_SECRET) {
+        throw new Error("JWT_SECRET is not defined");
+        return;
+      }
+      const token = jwt.sign(
+        {
+          id: user.id,
+          role: role,
+        },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1h",
+        }
+      );
+
+      // Set token in HTTP-only cookie
+      res.cookie("token", token, {
+        httpOnly: true, // Prevents client-side access
+        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
+        sameSite: "strict", // CSRF protection
+        maxAge: 3600000, // 1 hour
+      });
 
       // Store user in session (or generate JWT)
       req.user = { id: user.id.toString(), role: Role.NONE, email: user.email };
@@ -111,9 +163,7 @@ export class AuthController {
       res.json({
         message: "Login successful",
         user: {
-          id: user.id,
-          name: user.name,
-          email: user.email,
+          ...user,
         },
       });
     } catch (error: any) {
@@ -131,28 +181,20 @@ export class AuthController {
    * Get current user
    */
   static async getCurrUser(req: Request, res: Response) {
-    if (!req.user) {
+    console.log(req.user);
+    if (!req.user?.id) {
       res.status(401).json({ message: "Unauthorized" });
       return;
     }
     try {
-      // Get tenant or manager by user ID
-      const tenant = await prisma.tenant.findFirst({
-        where: { email: req.user.email },
-      });
-      const manager = await prisma.manager.findFirst({
-        where: { email: req.user.email },
-      });
-      if (tenant) {
-        req.user.role = Role.TENANT;
-      }
-      if (manager) {
-        req.user.role = Role.MANAGER;
+      if (req.user) {
+        res.json({ user: { ...req.user } });
+      } else {
+        res.status(404).json({ message: "User not found" });
       }
     } catch (err) {
       res.status(500).json({ message: "Failed to current user" });
     }
-    res.json({ user: req.user });
   }
 
   /**
@@ -163,6 +205,12 @@ export class AuthController {
       if (err) {
         return res.status(500).json({ message: "Logout failed" });
       }
+      res.cookie("token", "", {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        expires: new Date(0),
+      });
       res.json({ message: "Logged out successfully" });
     });
   }
