@@ -1,5 +1,5 @@
 import { cleanParams, withToast } from "@/lib/utils";
-import { Application, Manager, Property, Tenant } from "@/types/prismaTypes";
+import { Application, Lease, Manager, Payment, Property, Tenant } from "@/types/prismaTypes";
 import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { FiltersState } from ".";
 
@@ -203,6 +203,35 @@ export const api = createApi({
         });
       },
     }),
+    getLeases: build.query<Lease[], number>({
+      query: () => "leases",
+      providesTags: [ApiTags.LEASES],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch leases.",
+        });
+      },
+    }),
+
+    getPropertyLeases: build.query<Lease[], number>({
+      query: (propertyId) => `properties/${propertyId}/leases`,
+      providesTags: [ApiTags.LEASES],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch property leases.",
+        });
+      },
+    }),
+
+    getPayments: build.query<Payment[], number>({
+      query: (leaseId) => `leases/${leaseId}/payments`,
+      providesTags: [ApiTags.PAYMENTS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch payment info.",
+        });
+      },
+    }),
   }),
 });
 
@@ -217,4 +246,7 @@ export const {
   useRemoveFavoritePropertyMutation,
   useCreateApplicationMutation,
   useGetCurrentResidencesQuery,
+  useGetLeasesQuery,
+  useGetPropertyLeasesQuery,
+  useGetPaymentsQuery,
 } = api;
