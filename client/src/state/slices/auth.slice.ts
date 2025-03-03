@@ -1,11 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import Cookies from "js-cookie";
 
-interface User {
-  id: string;
-  name: string;
-  email: string;
-}
 
 interface AuthState {
   user: User | null;
