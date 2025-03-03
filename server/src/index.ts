@@ -14,7 +14,12 @@ import propertyRoutes from "./routes/property.route";
 import leaseRoutes from "./routes/lease.route.";
 import applicationRoutes from "./routes/applications.route";
 import { Role } from "./enums/RoleEnums";
+import path from "path";
+import multer from "multer";
+import { uploadPhotos } from "./upload";
 
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
@@ -48,7 +53,12 @@ app.get("/api/", (req, res) => {
 
 app.use("/api/auth", authrouter);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/properties", propertyRoutes);
+app.use(
+  "/api/properties",
+  upload.array("photos"),
+  uploadPhotos,
+  propertyRoutes
+);
 app.use("/api/leases", leaseRoutes);
 app.use("/api/tenants", authMiddleware([Role.TENANT]), tenantRoutes);
 app.use("/api/managers", authMiddleware([Role.MANAGER]), managerRoutes);
@@ -58,3 +68,8 @@ const port = Number(process.env.PORT) || 3002;
 app.listen(port, "0.0.0.0", () => {
   console.log(`Server running on port ${port}`);
 });
+app.use(
+  "/api/uploads",
+  express.static(path.join(__dirname, "/uploads"))
+);
+

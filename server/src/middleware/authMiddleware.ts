@@ -77,7 +77,6 @@ export const authMiddleware = (allowedRoles: Role[]) => {
         sameSite: "strict", // CSRF protection
         maxAge: 3600000, // 1 hour
       });
-      console.log("User:", req.user);
 
       if (!req.user) {
         res.status(401).json({ message: "Unauthorized please login" });

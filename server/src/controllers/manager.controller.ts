@@ -109,6 +109,7 @@ export class ManagerController {
           const longitude = geoJSON.coordinates[0];
           const latitude = geoJSON.coordinates[1];
 
+          console.log(property);
           return {
             ...property,
             location: {

@@ -4,14 +4,14 @@ import SettingsForm from "@/components/SettingsForm";
 import {
   useUpdateManagerSettingsMutation,
 } from "@/state/api";
+import { useAppSelector } from "@/state/redux";
 
 import React from "react";
 
 const ManagerSettings = () => {
-  const { data: { user: authUser } = {}, isLoading } = useGetCurrentUserQuery();
+  const authUser = useAppSelector((state) => state.auth.user);
   const [updateManager] = useUpdateManagerSettingsMutation();
 
-  if (isLoading) return <>Loading...</>;
 
   const initialData = {
     name: authUser?.name,

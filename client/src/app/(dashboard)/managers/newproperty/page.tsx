@@ -11,6 +11,7 @@ import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { useAppSelector } from "@/state/redux";
+import { toast } from "sonner";
 
 
 const NewProperty = () => {
@@ -64,9 +65,14 @@ const NewProperty = () => {
       }
     });
 
-    formData.append("managerCognitoId", authUser.id);
+    formData.append("managerCognitoId", authUser.cognitoId);
 
-    await createProperty(formData);
+    await createProperty(formData).unwrap().then(() => {
+      toast.success("Property created successfully");
+    }).catch((error) => {
+      toast.error("Failed to create property");
+      console.error(error);
+    });
   };
 
   return (
