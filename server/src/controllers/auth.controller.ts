@@ -181,7 +181,6 @@ export class AuthController {
    * Get current user
    */
   static async getCurrUser(req: Request, res: Response) {
-    console.log(req.user);
     if (!req.user?.id) {
       res.status(401).json({ message: "Unauthorized" });
       return;

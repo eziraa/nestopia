@@ -3,9 +3,10 @@ import { PrismaClient, Prisma } from "@prisma/client";
 import { wktToGeoJSON } from "@terraformer/wkt";
 import { S3Client } from "@aws-sdk/client-s3";
 import { Location } from "@prisma/client";
-import { Upload } from "@aws-sdk/lib-storage";
+import fs from "fs";
 import { IQProperty } from "../types/propertyType";
 import axios from "axios";
+import path from "path";
 const prisma = new PrismaClient();
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
@@ -141,6 +142,7 @@ export class PropertyController {
 
       const properties = await prisma.$queryRaw(completeQuery);
 
+      console.log(properties);
       res.json(properties);
     } catch (err: any) {
       res
@@ -202,7 +204,6 @@ export class PropertyController {
 
   static async createPropery(req: Request, res: Response): Promise<void> {
     try {
-      const files = req.files as Express.Multer.File[];
       const {
         address,
         city,
@@ -210,26 +211,9 @@ export class PropertyController {
         country,
         postalCode,
         managerCognitoId,
+        photoUrls,
         ...propertyData
       } = req.body;
-
-      const photoUrls = await Promise.all(
-        files.map(async (file) => {
-          const uploadParams = {
-            Bucket: process.env.S3_BUCKET_NAME!,
-            Key: `properties/${Date.now()}-${file.originalname}`,
-            Body: file.buffer,
-            ContentType: file.mimetype,
-          };
-
-          const uploadResult = await new Upload({
-            client: s3Client,
-            params: uploadParams,
-          }).done();
-
-          return uploadResult.Location;
-        })
-      );
 
       const geocodingUrl = `https://nominatim.openstreetmap.org/search?${new URLSearchParams(
         {
@@ -241,11 +225,13 @@ export class PropertyController {
           limit: "1",
         }
       ).toString()}`;
+
       const geocodingResponse = await axios.get(geocodingUrl, {
         headers: {
-          "User-Agent": "RealEstateApp (justsomedummyemail@gmail.com",
+          "User-Agent": "Real State (ezratgab@gmail.com)",
         },
       });
+
       const [longitude, latitude] =
         geocodingResponse.data[0]?.lon && geocodingResponse.data[0]?.lat
           ? [
