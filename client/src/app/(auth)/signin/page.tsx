@@ -6,10 +6,10 @@ import { toast } from "sonner";
 import { useLoginMutation, } from "@/state/auth.api";
 import { LoginRequest } from "@/types/authTypes";
 import { useState } from "react";
-import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { useAppDispatch } from "@/state/redux";
 import { login } from "@/state/slices/auth.slice";
+import { useRouter } from "next/navigation";
 const SIGN_UP_TOAST = "SIGN_UP_TOAST";
-
 
 export default function SignIn() {
 
@@ -24,7 +24,7 @@ export default function SignIn() {
 
     const [submitting, setSubmitting] = useState(false);
 
-    const user = useAppSelector(state => state.auth.user)
+    const router = useRouter();
     const [singup] = useLoginMutation()
     const onSubmit = async (data: LoginRequest) => {
         setSubmitting(true);
@@ -41,6 +41,7 @@ export default function SignIn() {
                     user: res.user,
                 }));
                 toast.success("Signin successful", { id: SIGN_UP_TOAST });
+                router.push("/");
             }).catch((err) => {
                 setSubmitting(false);
                 toast.error(err.data.message, { id: SIGN_UP_TOAST });
@@ -69,11 +70,7 @@ export default function SignIn() {
                     <img className="w-12 h-12 border-2 rounded-full border-red-500 bg-red-300" src="/logo.svg" alt="Logo" />
                     <h1 className="text-2xl text-slate-700 font-bold">NESTO<span className="text-secondary-400">PIA</span> </h1>
                 </div>
-                <pre>
-                    {
-                        JSON.stringify(user, null, 2)
-                    }
-                </pre>
+
                 <div className="flex py-2  w-full items-center space-x-2">
                     <h1 className=" text-slate-600 font-bold"> Welcome!!, Please signin to continue </h1>
                 </div>

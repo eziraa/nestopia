@@ -6,7 +6,6 @@ import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
-import { signOut } from "aws-amplify/auth";
 import { Bell, MessageCircle, Plus, Search } from "lucide-react";
 import {
   DropdownMenu,
@@ -17,19 +16,30 @@ import {
 } from "./ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { SidebarTrigger } from "./ui/sidebar";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppDispatch, useAppSelector } from "@/state/redux";
+import { useLogoutMutation } from "@/state/auth.api";
+import { toast } from "sonner";
+import { logout } from "@/state/slices/auth.slice";
 
 const Navbar = () => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+
+  const dispach = useAppDispatch();
+  const authUser = useAppSelector(state => state.auth.user) as User;
   const router = useRouter();
   const pathname = usePathname();
+  const [signOut, { isLoading }] = useLogoutMutation();
 
   const isDashboardPage =
     pathname.includes("/managers") || pathname.includes("/tenants");
 
   const handleSignOut = async () => {
-    await signOut();
-    window.location.href = "/";
+    await signOut().unwrap().then(() => {
+      dispach(logout());
+      window.location.href = "/";
+      toast.success("Signed out successfully");
+    }).catch(err => {
+      toast.error(err.message || "Something went wrong");
+    });
   };
 
   return (
@@ -58,9 +68,9 @@ const Navbar = () => {
                 className="w-6 h-6"
               />
               <div className="text-xl font-bold">
-                RENT
+                NESTO
                 <span className="text-secondary-500 font-light hover:!text-primary-300">
-                  IFUL
+                  PIA
                 </span>
               </div>
             </div>
@@ -101,6 +111,10 @@ const Navbar = () => {
         <div className="flex items-center gap-5">
           {authUser ? (
             <>
+
+              <div className="hidden md:block">
+                <span>{authUser?.role || "No Role"}</span>
+              </div>
               <div className="relative hidden md:block">
                 <MessageCircle className="w-6 h-6 cursor-pointer text-primary-200 hover:text-primary-400" />
                 <span className="absolute top-0 right-0 w-2 h-2 bg-secondary-700 rounded-full"></span>
@@ -114,12 +128,12 @@ const Navbar = () => {
                 <DropdownMenuTrigger className="flex items-center gap-2 focus:outline-none">
                   <Avatar>
                     <AvatarImage src={authUser?.name} />
-                    <AvatarFallback className="bg-primary-600">
+                    <AvatarFallback className="bg-primary-600 text-slate-50">
                       {authUser.role?.[0].toUpperCase()}
                     </AvatarFallback>
                   </Avatar>
                   <p className="text-primary-200 hidden md:block">
-                    {authUser?.name}
+                    {authUser?.name} 
                   </p>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="bg-white text-primary-700">

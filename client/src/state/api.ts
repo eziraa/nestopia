@@ -242,7 +242,7 @@ export const api = createApi({
           queryParams.append("userId", params.userId.toString());
         }
         if (params.userType) {
-          queryParams.append("userType", params.userType);
+          queryParams.append("role", params.userType);
         }
 
         return `applications?${queryParams.toString()}`;
@@ -308,4 +308,5 @@ export const {
   useGetPaymentsQuery,
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
+  useCreatePropertyMutation,
 } = api;

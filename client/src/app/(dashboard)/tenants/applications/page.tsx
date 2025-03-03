@@ -4,12 +4,13 @@ import ApplicationCard from "@/components/ApplicationCard";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import { useGetApplicationsQuery } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import { CircleCheckBig, Clock, Download, XCircle } from "lucide-react";
 import React from "react";
 
 const Applications = () => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const {
     data: applications,
     isLoading,

@@ -9,7 +9,8 @@ import {
 import { Form } from "@/components/ui/form";
 import { ApplicationFormData, applicationSchema } from "@/lib/schemas";
 import { useCreateApplicationMutation } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
@@ -20,7 +21,7 @@ const ApplicationModal = ({
   propertyId,
 }: ApplicationModalProps) => {
   const [createApplication] = useCreateApplicationMutation();
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
 
   const form = useForm<ApplicationFormData>({
     resolver: zodResolver(applicationSchema),

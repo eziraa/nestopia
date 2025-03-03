@@ -6,13 +6,12 @@ import Sidebar from "@/components/AppSidebar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import React, { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
 
 const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
-  const { data: { user } = {}, isLoading: authLoading } = useGetCurrentUserQuery();
+  const user = useAppSelector((state) => state.auth.user);
   const router = useRouter();
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (user)
@@ -29,14 +28,10 @@ const DashboardLayout = ({ children }: { children: React.ReactNode }) => {
             : "/tenants/favorites",
           { scroll: false }
         );
-      } else
-      {
-        setIsLoading(false);
-      }
+      } 
     }
   }, [user, router, pathname]);
 
-  if (authLoading || isLoading) return <>Loading...</>;
   if (!user?.role) return null;
 
   return (

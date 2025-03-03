@@ -8,13 +8,14 @@ import {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
 } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import { CircleCheckBig, Download, File, Hospital } from "lucide-react";
 import Link from "next/link";
 import React, { useState } from "react";
 
 const Applications = () => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const [activeTab, setActiveTab] = useState("all");
 
   const {

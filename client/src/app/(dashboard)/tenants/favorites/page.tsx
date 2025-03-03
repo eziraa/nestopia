@@ -7,11 +7,12 @@ import {
   useGetPropertiesQuery,
   useGetTenantQuery,
 } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import React from "react";
 
 const Favorites = () => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const { data: tenant } = useGetTenantQuery(
     authUser?.id || "",
     {

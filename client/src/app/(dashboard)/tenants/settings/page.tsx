@@ -4,14 +4,14 @@ import SettingsForm from "@/components/SettingsForm";
 import {
   useUpdateTenantSettingsMutation,
 } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import React from "react";
 
 const TenantSettings = () => {
-  const { data: { user: authUser } = {}, isLoading } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const [updateTenant] = useUpdateTenantSettingsMutation();
 
-  if (isLoading) return <>Loading...</>;
 
   const initialData = {
     name: authUser?.name,

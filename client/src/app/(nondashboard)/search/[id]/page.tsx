@@ -8,13 +8,14 @@ import PropertyDetails from "./PropertyDetails";
 import PropertyLocation from "./PropertyLocation";
 import ContactWidget from "./ContactWidget";
 import ApplicationModal from "./ApplicationModal";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 
 const SingleListing = () => {
   const { id } = useParams();
   const propertyId = Number(id);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
 
   return (
     <div>

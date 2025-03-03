@@ -14,7 +14,8 @@ import {
   useGetPaymentsQuery,
   useGetPropertyQuery,
 } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import { Lease, Payment, Property } from "@/types/prismaTypes";
 import {
   ArrowDownToLineIcon,
@@ -227,7 +228,7 @@ const BillingHistory = ({ payments }: { payments: Payment[] }) => {
 
 const Residence = () => {
   const { id } = useParams();
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const {
     data: property,
     isLoading: propertyLoading,

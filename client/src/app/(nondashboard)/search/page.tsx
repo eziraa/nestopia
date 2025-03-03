@@ -11,6 +11,7 @@ import { setFilters } from "@/state";
 import Map from "./Map";
 import Listings from "./Listings";
 
+
 const SearchPage = () => {
   const searchParams = useSearchParams();
   const dispatch = useAppDispatch();
@@ -56,7 +57,7 @@ const SearchPage = () => {
         >
           <FiltersFull />
         </div>
-        <Map />
+        {/* <Map /> */}
         <div className="basis-4/12 overflow-y-auto">
           <Listings />
         </div>

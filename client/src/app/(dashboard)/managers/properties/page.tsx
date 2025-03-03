@@ -4,17 +4,18 @@ import Card from "@/components/Card";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import { useGetManagerPropertiesQuery } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import React from "react";
 
 const Properties = () => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const {
     data: managerProperties,
     isLoading,
     error,
-  } = useGetManagerPropertiesQuery(authUser?.id || "", {
-    skip: !authUser?.id,
+  } = useGetManagerPropertiesQuery(authUser?.cognitoId || "", {
+    skip: !authUser?.cognitoId,
   });
 
   if (isLoading) return <Loading />;

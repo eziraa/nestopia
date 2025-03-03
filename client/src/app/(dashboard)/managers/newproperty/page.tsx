@@ -10,11 +10,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 
 const NewProperty = () => {
   const [createProperty] = useCreatePropertyMutation();
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
 
   const form = useForm<PropertyFormData>({
     resolver: zodResolver(propertySchema),

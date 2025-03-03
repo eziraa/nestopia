@@ -4,7 +4,7 @@ import SettingsForm from "@/components/SettingsForm";
 import {
   useUpdateManagerSettingsMutation,
 } from "@/state/api";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+
 import React from "react";
 
 const ManagerSettings = () => {

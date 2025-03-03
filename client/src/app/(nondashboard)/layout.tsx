@@ -2,20 +2,24 @@
 
 import Navbar from "@/components/Navbar";
 import { NAVBAR_HEIGHT } from "@/lib/constants";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useEffect, useState } from "react";
-
+enum Role {
+  Tenant = "Tenant",
+  Manager = "Manager",
+  None = "None"
+}
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { data: user, isLoading: authLoading } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const router = useRouter();
   const pathname = usePathname();
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (user)
+    if (authUser)
     {
-      const userRole = user.user.role?.toLowerCase();
+      const userRole = authUser.role?.toLowerCase();
       if (
         (userRole === Role.Manager && pathname.startsWith("/search")) ||
         (userRole === Role.Manager && pathname === "/")
@@ -27,9 +31,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         setIsLoading(false);
       }
     }
-  }, [user, router, pathname]);
+  }, [authUser, router, pathname]);
 
-  if (authLoading || isLoading) return <>Loading...</>;
 
   return (
     <div className="h-full w-full">

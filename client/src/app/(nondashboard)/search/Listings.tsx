@@ -7,14 +7,14 @@ import { Property } from "@/types/prismaTypes";
 import Card from "@/components/Card";
 import React from "react";
 import CardCompact from "@/components/CardCompact";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+
 
 const Listings = () => {
-  const { data } = useGetCurrentUserQuery();
+  const user = useAppSelector(state => state.auth.user);
   const { data: tenant } = useGetTenantQuery(
-    data?.user.id || "",
+    user?.id || "",
     {
-      skip: !data?.user.id,
+      skip: !!user?.id,
     }
   );
   const viewMode = useAppSelector((state) => state.global.viewMode);
@@ -51,7 +51,7 @@ const Listings = () => {
                   ) || false
                 }
                 onFavoriteToggle={() => { }}
-                showFavoriteButton={!!data?.user}
+                showFavoriteButton={!!user}
                 propertyLink={`/search/${property.id}`}
               />
             ) : (
@@ -64,7 +64,7 @@ const Listings = () => {
                   ) || false
                 }
                 onFavoriteToggle={() => { }}
-                showFavoriteButton={!!data?.user}
+                  showFavoriteButton={!!user}
                 propertyLink={`/search/${property.id}`}
               />
             )

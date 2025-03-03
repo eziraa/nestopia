@@ -1,11 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { useGetCurrentUserQuery } from "@/state/auth.api";
+import { useAppSelector } from "@/state/redux";
+
 import { Phone } from "lucide-react";
 import { useRouter } from "next/navigation";
 import React from "react";
 
 const ContactWidget = ({ onOpenModal }: ContactWidgetProps) => {
-  const { data: { user: authUser } = {} } = useGetCurrentUserQuery();
+  const authUser = useAppSelector(state => state.auth.user);
   const router = useRouter();
 
   const handleButtonClick = () => {
