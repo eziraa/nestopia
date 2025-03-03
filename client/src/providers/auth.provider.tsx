@@ -4,24 +4,26 @@ import { useGetCurrentUserQuery } from "@/state/auth.api";
 import { useAppDispatch } from "@/state/redux";
 import { login, logout } from "@/state/slices/auth.slice";
 import { useEffect } from "react";
+import { toast } from "sonner";
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data: { user } = {}, isLoading: authLoading } =
+  const { data, isLoading: authLoading } =
     useGetCurrentUserQuery();
   const dispatch = useAppDispatch();
   useEffect(() => {
-    if (user)
+    if (data?.user)
     {
       dispatch(
         login({
-          user: user,
+          user: data?.user,
         })
       );
     }
     else
     {
-      dispatch(logout());
+      if (data?.status === 401)
+        dispatch(logout());
     }
-  }, [dispatch, user]);
+  }, [dispatch, data]);
   if (authLoading)
   {
     return <Loading />;
