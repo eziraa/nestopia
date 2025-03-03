@@ -1,6 +1,7 @@
 export interface LoginResponse {
   message: string;
   user: User;
+  status: number;
 }
 
 export interface SignupResponse extends LoginResponse {}

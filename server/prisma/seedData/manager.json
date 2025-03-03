@@ -4,69 +4,89 @@
     "cognitoId": "010be580-60a1-70ae-780e-18a6fd94ad32",
     "name": "John Smith",
     "email": "john.smith@example.com",
-    "phoneNumber": "+1 (555) 123-4567"
+    "phoneNumber": "+1 (555) 123-4567",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 2,
     "cognitoId": "us-east-2:23456789-90ab-cdef-1234-567890abcdef",
     "name": "Sarah Johnson",
     "email": "sarah.johnson@example.com",
-    "phoneNumber": "+1 (555) 987-6543"
+    "phoneNumber": "+1 (555) 987-6543",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 3,
     "cognitoId": "us-east-2:34567890-90ab-cdef-1234-567890abcdef",
     "name": "Michael Brown",
     "email": "michael.brown@example.com",
-    "phoneNumber": "+1 (555) 456-7890"
+    "phoneNumber": "+1 (555) 456-7890",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 4,
     "cognitoId": "us-east-2:45678901-90ab-cdef-1234-567890abcdef",
     "name": "Emily Davis",
     "email": "emily.davis@example.com",
-    "phoneNumber": "+1 (555) 234-5678"
+    "phoneNumber": "+1 (555) 234-5678",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 5,
     "cognitoId": "us-east-2:56789012-90ab-cdef-1234-567890abcdef",
     "name": "Robert Wilson",
     "email": "robert.wilson@example.com",
-    "phoneNumber": "+1 (555) 876-5432"
+    "phoneNumber": "+1 (555) 876-5432",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 6,
     "cognitoId": "us-east-2:67890123-90ab-cdef-1234-567890abcdef",
     "name": "Lisa Thompson",
     "email": "lisa.thompson@example.com",
-    "phoneNumber": "+1 (555) 345-6789"
+    "phoneNumber": "+1 (555) 345-6789",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 7,
     "cognitoId": "us-east-2:78901234-90ab-cdef-1234-567890abcdef",
     "name": "Daniel Martinez",
     "email": "daniel.martinez@example.com",
-    "phoneNumber": "+1 (555) 789-0123"
+    "phoneNumber": "+1 (555) 789-0123",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 8,
     "cognitoId": "us-east-2:89012345-90ab-cdef-1234-567890abcdef",
     "name": "Olivia Garcia",
     "email": "olivia.garcia@example.com",
-    "phoneNumber": "+1 (555) 678-9012"
+    "phoneNumber": "+1 (555) 678-9012",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 9,
     "cognitoId": "us-east-2:90123456-90ab-cdef-1234-567890abcdef",
     "name": "Ethan Rodriguez",
     "email": "ethan.rodriguez@example.com",
-    "phoneNumber": "+1 (555) 567-8901"
+    "phoneNumber": "+1 (555) 567-8901",
+    "password": "password",
+    "role": "Manager"
   },
   {
     "id": 10,
     "cognitoId": "us-east-2:01234567-90ab-cdef-1234-567890abcdef",
     "name": "Sophia Kim",
     "email": "sophia.kim@example.com",
-    "phoneNumber": "+1 (555) 456-7890"
+    "phoneNumber": "+1 (555) 456-7890",
+    "password": "password",
+    "role": "Manager"
   }
 ]

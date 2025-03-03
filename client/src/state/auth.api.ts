@@ -23,7 +23,10 @@ export const AuthApi = createApi({
       query: (body) => ({
         url: "auth/signup",
         method: "POST",
-        body,
+        body: {
+          ...body,
+          role: Role.Manager,
+        },
       }),
       invalidatesTags: [AuthTagsEnum.SIGNUP],
     }),
@@ -35,7 +38,7 @@ export const AuthApi = createApi({
       }),
       invalidatesTags: [AuthTagsEnum.LOGIN],
     }),
-    logout: builder.mutation({
+    logout: builder.mutation<{ message: string }, void>({
       query: () => ({
         url: "auth/logout",
         method: "POST",

@@ -1,13 +1,12 @@
 "use client";
 import Loading from "@/components/Loading";
 import { useGetCurrentUserQuery } from "@/state/auth.api";
+
 import { useAppDispatch } from "@/state/redux";
 import { login, logout } from "@/state/slices/auth.slice";
 import { useEffect } from "react";
-import { toast } from "sonner";
 const AuthProvider = ({ children }: { children: React.ReactNode }) => {
-  const { data, isLoading: authLoading } =
-    useGetCurrentUserQuery();
+  const { data, isLoading: authLoading } = useGetCurrentUserQuery();
   const dispatch = useAppDispatch();
   useEffect(() => {
     if (data?.user)

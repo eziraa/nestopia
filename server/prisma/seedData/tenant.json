@@ -7,7 +7,9 @@
     "phoneNumber": "+1 (555) 555-6666",
     "properties": {
       "connect": [{ "id": 5 }, { "id": 6 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 2,
@@ -17,7 +19,9 @@
     "phoneNumber": "+1 (555) 333-4444",
     "favorites": {
       "connect": [{ "id": 2 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 3,
@@ -30,7 +34,9 @@
     },
     "favorites": {
       "connect": []
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 4,
@@ -43,7 +49,9 @@
     },
     "favorites": {
       "connect": [{ "id": 4 }, { "id": 5 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 5,
@@ -56,7 +64,9 @@
     },
     "favorites": {
       "connect": [{ "id": 1 }, { "id": 5 }, { "id": 6 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 6,
@@ -66,7 +76,9 @@
     "phoneNumber": "+1 (555) 222-3333",
     "properties": {
       "connect": [{ "id": 10 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 7,
@@ -79,7 +91,9 @@
     },
     "favorites": {
       "connect": [{ "id": 3 }, { "id": 7 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 8,
@@ -89,7 +103,9 @@
     "phoneNumber": "+1 (555) 444-5555",
     "properties": {
       "connect": [{ "id": 3 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 9,
@@ -102,7 +118,9 @@
     },
     "favorites": {
       "connect": [{ "id": 7 }, { "id": 9 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 10,
@@ -115,7 +133,9 @@
     },
     "favorites": {
       "connect": [{ "id": 2 }, { "id": 10 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 11,
@@ -128,7 +148,9 @@
     },
     "favorites": {
       "connect": [{ "id": 1 }, { "id": 4 }, { "id": 7 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 12,
@@ -138,7 +160,9 @@
     "phoneNumber": "+1 (555) 987-6543",
     "favorites": {
       "connect": [{ "id": 3 }, { "id": 6 }, { "id": 9 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 13,
@@ -148,7 +172,9 @@
     "phoneNumber": "+1 (555) 246-8135",
     "properties": {
       "connect": [{ "id": 4 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 14,
@@ -158,7 +184,9 @@
     "phoneNumber": "+1 (555) 369-2580",
     "favorites": {
       "connect": [{ "id": 1 }, { "id": 10 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   },
   {
     "id": 15,
@@ -171,6 +199,8 @@
     },
     "favorites": {
       "connect": [{ "id": 4 }, { "id": 7 }, { "id": 9 }]
-    }
+    },
+    "password": "password",
+    "role": "Tenant"
   }
 ]
