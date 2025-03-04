@@ -15,11 +15,6 @@ import leaseRoutes from "./routes/lease.route.";
 import applicationRoutes from "./routes/applications.route";
 import { Role } from "./enums/RoleEnums";
 import path from "path";
-import multer from "multer";
-import { uploadPhotos } from "./upload";
-
-const storage = multer.memoryStorage();
-const upload = multer({ storage: storage });
 /* CONFIGURATIONS */
 dotenv.config();
 const app = express();
@@ -55,8 +50,6 @@ app.use("/api/auth", authrouter);
 app.use("/api/applications", applicationRoutes);
 app.use(
   "/api/properties",
-  upload.array("photos"),
-  uploadPhotos,
   propertyRoutes
 );
 app.use("/api/leases", leaseRoutes);
