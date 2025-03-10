@@ -21,7 +21,7 @@ const ManagerSettings = () => {
 
   const handleSubmit = async (data: typeof initialData) => {
     await updateManager({
-      cognitoId: authUser?.id,
+      cognitoId: authUser?.cognitoId,
       ...data,
     });
   };

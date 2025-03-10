@@ -5,12 +5,14 @@ import { useForm } from "react-hook-form";
 import { Form } from "./ui/form";
 import { CustomFormField } from "./FormField";
 import { Button } from "./ui/button";
+import { useAppSelector } from "@/state/redux";
 
 const SettingsForm = ({
   initialData,
   onSubmit,
   userType,
 }: SettingsFormProps) => {
+  const user = useAppSelector((state) => state.auth.user);  
   const [editMode, setEditMode] = useState(false);
   const form = useForm<SettingsFormData>({
     resolver: zodResolver(settingsSchema),

@@ -10,7 +10,7 @@ export class LeaseController {
         include: {
           tenant: true,
           property: true,
-        },
+        }, 
       });
 
       res.json(leases);

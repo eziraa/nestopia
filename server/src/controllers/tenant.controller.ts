@@ -58,7 +58,7 @@ export class TenantController {
 
       // Updating tenant
       const updatedTenant = await prisma.tenant.update({
-        where: { id: Number(id) },
+        where: { cognitoId: (id) },
         data: {
           name,
           email,

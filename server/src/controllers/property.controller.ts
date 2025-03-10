@@ -136,7 +136,6 @@ export class PropertyController {
 
       const properties = await prisma.$queryRaw(completeQuery);
 
-      console.log(properties);
       res.json(properties);
     } catch (err: any) {
       res

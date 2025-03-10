@@ -158,7 +158,7 @@ export class AuthController {
       });
 
       // Store user in session (or generate JWT)
-      req.user = { id: user.id.toString(), role: Role.NONE, email: user.email };
+      req.user = { id: user.id.toString(),cognitoId: user.cognitoId, role: Role.NONE, email: user.email };
 
       res.json({
         message: "Login successful",
@@ -186,6 +186,7 @@ export class AuthController {
       return;
     }
     try {
+     
       if (req.user) {
         res.json({ user: { ...req.user } });
       } else {
@@ -203,20 +204,7 @@ export class AuthController {
 
     try {
 
-      // await new Promise((resolve, reject)=>{
-      //   req.session?.destroy((err) => {
-      //     if (err) {
-      //       reject(err)
-      //     }
-      //     resolve(true)
-      //   });
-      // })
-      // res._destroy(null, (error) => {
-      //   if (error) {
-      //     console.error("Error destroying response:", error);
-      //   }
-      // });
-
+      
       res.clearCookie("token",{
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",

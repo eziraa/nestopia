@@ -67,11 +67,24 @@ export class ManagerController {
 
   static async updateManager(req: Request, res: Response): Promise<void> {
     try {
-      const { id } = req.params;
+      const { cognitoId } = req.params;
+      if(!cognitoId) {
+        res.status(400).json({ message: "Cognito ID required" });
+        return
+      }
       const { name, email, phoneNumber } = req.body;
 
+      const manager = await prisma.manager.findUnique({
+        where: { cognitoId: cognitoId },
+      })
+      if(!manager) {
+        res.status(404).json({ message: "Manager not found" });
+        return
+      }
+    
+
       const updateManager = await prisma.manager.update({
-        where: { id: Number(id) },
+        where: { id: manager.id },
         data: {
           name,
           email,
