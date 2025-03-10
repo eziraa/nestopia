@@ -1,5 +1,5 @@
 import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "../middleware/auth.middleware";
 import { Role } from "../enums/RoleEnums";
 import { PropertyController } from "../controllers/property.controller";
 import multer from "multer";
@@ -11,6 +11,7 @@ const router = express.Router();
 
 router.get("/", PropertyController.listProperties);
 router.get("/:id", PropertyController.getProperty);
+router.get("/:id/leases", PropertyController.getPropertyLeases);
 router.post(
   "/",
   upload.array("photos"),
