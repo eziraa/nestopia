@@ -49,8 +49,8 @@ export const withToast = async <T>(
     if (success) toast.success(success);
     return result;
   } catch (err) {
+    console.log(err)
     if (error) toast.error(error);
-    throw err;
   }
 };
 

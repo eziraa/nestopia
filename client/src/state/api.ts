@@ -118,15 +118,17 @@ export const api = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...result.map(({ id }) => ({
+              ...(
+                result.map(({ id }) => ({
                 type: ApiTags.PROPERTIES as const,
                 id,
-              })),
+              }))),
               { type: ApiTags.PROPERTIES, id: "LIST" },
             ]
           : [{ type: ApiTags.PROPERTIES, id: "LIST" }],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
+          success: "Properties loaded successfully!",
           error: "Failed to load manager profile.",
         });
       },
