@@ -1,6 +1,7 @@
 "use client";
 
 import Card from "@/components/Card";
+import ErrorPage from "@/components/ErrorPage";
 import Header from "@/components/Header";
 import Loading from "@/components/Loading";
 import { useGetManagerPropertiesQuery } from "@/state/api";
@@ -19,7 +20,7 @@ const Properties = () => {
   });
 
   if (isLoading) return <Loading />;
-  if (error) return <div>Error loading manager properties</div>;
+  if (error) return <ErrorPage title="Failed to load properties" />;
 
   return (
     <div className="dashboard-container">

@@ -35,7 +35,7 @@ const Navbar = () => {
   const handleSignOut = async () => {
     await signOut().unwrap().then(() => {
       dispach(logout());
-      window.location.href = "/";
+      router.push("/");
       toast.success("Signed out successfully");
     }).catch(err => {
       toast.error(err.message || "Something went wrong");
