@@ -1,16 +1,10 @@
 import { Request, Response } from "express";
 import { PrismaClient, Prisma } from "@prisma/client";
 import { wktToGeoJSON } from "@terraformer/wkt";
-import { S3Client } from "@aws-sdk/client-s3";
 import { Location } from "@prisma/client";
-import fs from "fs";
 import { IQProperty } from "../types/propertyType";
 import axios from "axios";
-import path from "path";
 const prisma = new PrismaClient();
-const s3Client = new S3Client({
-  region: process.env.AWS_REGION,
-});
 
 export class PropertyController {
   static async listProperties(req: Request, res: Response): Promise<void> {
@@ -282,6 +276,31 @@ export class PropertyController {
       res.status(500).json({
         message: `Failed to create Property ${err.message}`,
       });
+    }
+  }
+
+  static async getPropertyLeases(req: Request, res: Response): Promise<void> {
+    try {
+      
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({ message: "Property ID is required" });
+        return;
+      }
+      const leases = await prisma.lease.findMany({
+        where: {
+          propertyId: Number(id)
+        },
+        include:{
+          tenant: true,
+          property: true,
+          payments: true
+        }
+      })
+      res.json(leases);
+    } catch (error : any) {
+      res.status(500).json({ message: `Error fetching leases: ${error.message}` });
+      console.log("@@GETTING LEASES ERROR: ", error);
     }
   }
 }
