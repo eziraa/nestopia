@@ -103,6 +103,7 @@ export class TenantController {
       res
         .status(500)
         .json({ message: `Error retrieving tenant: ${err.message}` });
+        return;
     }
   }
 

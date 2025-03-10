@@ -1,6 +1,6 @@
 import { Router } from "express";
 import { AuthController } from "../controllers/auth.controller";
-import { authMiddleware } from "../middleware/authMiddleware";
+import { authMiddleware } from "../middleware/auth.middleware";
 import { Role } from "../enums/RoleEnums";
 const router = Router();
 router.post("/signin", AuthController.signin);

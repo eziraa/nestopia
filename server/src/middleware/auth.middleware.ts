@@ -48,7 +48,8 @@ export const authMiddleware = (allowedRoles: Role[]) => {
 
     try {
       if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined");
+        res.status(500).json({ message: "Internal server error" });
+        return;
       }
       const decoded = jwt.verify(token, process.env.JWT_SECRET) as {
         id: number;
@@ -81,13 +82,13 @@ export const authMiddleware = (allowedRoles: Role[]) => {
       if (!req.user) {
         res.status(401).json({ message: "Unauthorized please login" });
         return;
-      } else {
-        next();
-      }
+      } 
       const hasAccess = allowedRoles.includes(req.user.role);
       if (!hasAccess) {
-        res.status(403).json({ message: "Access Denied" });
+        res.status(403).json({ message: `Access Denied for role: ${role || "No Role"}` });
         return;
+      }else {
+        next();
       }
     } catch (err) {
       console.error("Failed to decode token:", err);

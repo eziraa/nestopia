@@ -5,7 +5,7 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import session from "express-session";
-import { authMiddleware } from "./middleware/authMiddleware";
+import { authMiddleware } from "./middleware/auth.middleware";
 /* ROUTE IMPORT */
 import authrouter from "./routes/auth.route";
 import tenantRoutes from "./routes/tenant.route";

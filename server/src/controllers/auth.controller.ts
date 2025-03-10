@@ -200,18 +200,36 @@ export class AuthController {
    * Logout
    */
   static async logout(req: Request, res: Response) {
-    req.session.destroy((err) => {
-      if (err) {
-        return res.status(500).json({ message: "Logout failed" });
-      }
-      res.cookie("token", "", {
+
+    try {
+
+      // await new Promise((resolve, reject)=>{
+      //   req.session?.destroy((err) => {
+      //     if (err) {
+      //       reject(err)
+      //     }
+      //     resolve(true)
+      //   });
+      // })
+      // res._destroy(null, (error) => {
+      //   if (error) {
+      //     console.error("Error destroying response:", error);
+      //   }
+      // });
+
+      res.clearCookie("token",{
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
-        expires: new Date(0),
-      });
-      res.json({ message: "Logged out successfully" });
-    });
+        })
+
+        res.json({ message: "Logged out successfully" });
+
+    } catch (error) {
+      console.log(error)
+      res.status(500).json({ message: "Logout failed please tray again!!" });
+    }
+    
   }
 
   static async validateSignup(req: Request, res: Response) {
