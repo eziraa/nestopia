@@ -240,7 +240,6 @@ export class AuthController {
         res.json({ message: "Logged out successfully" });
 
     } catch (error) {
-      console.log(error)
       res.status(500).json({ message: "Logout failed please tray again!!" });
     }
     

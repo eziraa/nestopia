@@ -20,11 +20,9 @@ export const uploadPhotos = async (
     }
     const promises = photos.map(async (photo) => {
       const filePath = path.join(__dirname, "uploads", photo.originalname);
-      console.log("File path" + filePath);
       await fs.promises.writeFile(filePath, photo.buffer);
       // Generate a URL to access the file
       const fileUrl = process.env.UPLOAD_DIR + `uploads/${photo.originalname}`;
-      console.log("File URL" + fileUrl);
       return fileUrl;
     });
 
