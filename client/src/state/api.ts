@@ -225,8 +225,8 @@ export const api = createApi({
       },
     }),
 
-    getPayments: build.query<Payment[], number>({
-      query: (leaseId) => `leases/${leaseId}/payments`,
+    getPropertyPayments: build.query<Payment[], number>({
+      query: (propertyId) => `properties/${propertyId}/payments`,
       providesTags: [ApiTags.PAYMENTS],
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
@@ -307,7 +307,7 @@ export const {
   useGetCurrentResidencesQuery,
   useGetLeasesQuery,
   useGetPropertyLeasesQuery,
-  useGetPaymentsQuery,
+  useGetPropertyPaymentsQuery,
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
   useCreatePropertyMutation,
