@@ -100,6 +100,7 @@ export class TenantController {
       // Sending response
       res.status(200).json(tenant);
     } catch (err: any) {
+      console.log("@@Error Getting tenant", err);
       res
         .status(500)
         .json({ message: `Error retrieving tenant: ${err.message}` });

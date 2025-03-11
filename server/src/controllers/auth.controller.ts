@@ -97,11 +97,14 @@ export class AuthController {
          return;
       }
 
-   
+      res.clearCookie("token",{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        })
 
       let role = Role.MANAGER;
       let user = await prisma.manager.findFirst({ where: { email } });
-
 
       if (!user) {
         user = await prisma.tenant.findFirst({ where: { email } });
@@ -119,6 +122,7 @@ export class AuthController {
             where: { id: user.id },
             data: {
               password: hashedPassword,
+              cognitoId: user.cognitoId
             },
           });
         else
@@ -126,6 +130,7 @@ export class AuthController {
           where: { id: user.id },
           data: {
             password: hashedPassword,
+            cognitoId: user.cognitoId
           },
         });
       }
@@ -144,12 +149,13 @@ export class AuthController {
       }
 
       // Generate Access Token (short-lived)
-      const accessToken = jwt.sign({ id: user.id, role }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ id: user.cognitoId, role }, process.env.JWT_SECRET, {
         expiresIn: "15m",
       });
 
+
       // Store access token in HTTP-only cookie
-      res.cookie("token", accessToken, {
+      res.cookie("token", token, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
@@ -157,7 +163,7 @@ export class AuthController {
       });
 
       // Generate Refresh Token (long-lived)
-      const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+      const refreshToken = jwt.sign({ id: user.cognitoId }, process.env.JWT_REFRESH_SECRET, {
         expiresIn: "7d",
       });
 
@@ -169,9 +175,9 @@ export class AuthController {
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
+
       res.json({
         message: "Login successful",
-        accessToken,
         user: {
           id: user.id,
           email: user.email,
@@ -215,7 +221,7 @@ export class AuthController {
           expiresIn: "15m",
         });
 
-        res.json({ accessToken: newAccessToken });
+        res.json({ token: newAccessToken });
       });
     } catch (error: any) {
       console.error("Refresh Token Error:", error);

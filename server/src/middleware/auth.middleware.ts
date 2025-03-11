@@ -1,12 +1,12 @@
 import { Request, Response, NextFunction } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import { Role } from "../enums/RoleEnums";
-import { PrismaClient } from "@prisma/client";
+import { Manager, PrismaClient, Tenant } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
 interface DecodedToken extends JwtPayload {
-  id: number;
+  id: string;
   role: Role;
 }
 
@@ -50,10 +50,15 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
       return acc;
     }, {} as Record<string, string>) || {};
 
-  let accessToken = cookies?.token;
+  let token = cookies?.token;
   const refreshToken = cookies?.refreshToken;
+  console.log("@@AT COOKIE", token);
+  console.log("@@ACCESS TOKEN", token);
+  console.log("@@REFRESH TOKEN", refreshToken);
 
-  if (!accessToken && !refreshToken) {
+
+
+  if (!token && !refreshToken) {
     return null;
   }
 
@@ -63,7 +68,7 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
   }
 
   try {
-    return jwt.verify(accessToken, process.env.JWT_SECRET) as DecodedToken;
+    return jwt.verify(token, process.env.JWT_SECRET) as DecodedToken;
   } catch (err) {
     console.log("Access token expired, attempting refresh...");
 
@@ -74,11 +79,11 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
 
     try {
       const decodedRefresh = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET) as DecodedToken;
-      let user = await prisma.manager.findUnique({ where: { id: decodedRefresh.id } });
+      let user = await prisma.manager.findUnique({ where: { cognitoId: decodedRefresh.id } });
 
       let role = Role.MANAGER;
       if (!user) {
-        user = await prisma.tenant.findUnique({ where: { id: decodedRefresh.id } });
+        user = await prisma.tenant.findUnique({ where: { cognitoId: decodedRefresh.id } });
         role = Role.TENANT;
       }
 
@@ -89,7 +94,7 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
 
       const newAccessToken = generateAccessToken({ id: user.id, role });
 
-      res.cookie("accessToken", newAccessToken, {
+      res.cookie("token", newAccessToken, {
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
         sameSite: "strict",
@@ -109,20 +114,32 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
 export const authMiddleware = (allowedRoles: Role[]) => {
   return async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const decoded = await verifyAndRefreshToken(req, res);
+    console.log("@@DECODDE",decoded)
     if (!decoded) {
       res.status(401).json({ message: "Unauthorized, please login" });
       return;
     }
 
-    let role = Role.MANAGER;
-    let user = await prisma.manager.findUnique({ where: { id: decoded.id } });
+    let role = decoded.role;
+    if(!role){
+      res.status(401).json({ message: "Unauthorized, please login" });
+      return
+    }
 
+    let user : Manager | Tenant | null = null;
+
+    if(role === Role.MANAGER){
+     user = await prisma.manager.findUnique({ where: { cognitoId: decoded.id } });
+    }
     if (!user) {
-      user = await prisma.tenant.findUnique({ where: { id: decoded.id } });
+      user = await prisma.tenant.findUnique({ where: { cognitoId: decoded.id } });
       role = Role.TENANT;
     }
 
     if (!user) {
+      console.log("Error finding user");
+      console.log("Cog ID", decoded.id);
+      console.log("Role", role);
       res.status(401).json({ message: "Unauthorized, please login" });
       return;
     }
