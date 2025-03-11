@@ -1,7 +1,6 @@
 "use client";
 
 import { NAVBAR_HEIGHT } from "@/lib/constants";
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import { Button } from "./ui/button";
@@ -60,7 +59,7 @@ const Navbar = () => {
             scroll={false}
           >
             <div className="flex items-center gap-3">
-              <Image
+              <img
                 src="/logo.svg"
                 alt="Rentiful Logo"
                 width={24}

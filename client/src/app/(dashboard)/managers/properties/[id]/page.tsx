@@ -16,7 +16,6 @@ import {
   useGetPropertyQuery,
 } from "@/state/api";
 import { ArrowDownToLine, ArrowLeft, Check, Download } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import React from "react";
@@ -63,7 +62,9 @@ const PropertyTenants = () => {
       />
 
       <div className="w-full space-y-6">
-        <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6">
+        {
+         !!leases?.length ? (
+            <div className="mt-8 bg-white rounded-xl shadow-md overflow-hidden p-6">
           <div className="flex justify-between items-center mb-4">
             <div>
               <h2 className="text-2xl font-bold mb-1">Tenants Overview</h2>
@@ -99,7 +100,7 @@ const PropertyTenants = () => {
                   <TableRow key={lease.id} className="h-24">
                     <TableCell>
                       <div className="flex items-center space-x-3">
-                        <Image
+                        <img
                           src="/landing-i1.png"
                           alt={lease.tenant.name}
                           width={40}
@@ -153,6 +154,19 @@ const PropertyTenants = () => {
             </Table>
           </div>
         </div>
+          )
+          :
+          (
+            <div className="flex">
+              <div className="w-full bg-white rounded-xl shadow-md p-6">
+                <h2 className="text-2xl font-bold mb-1">Tenants Overview</h2>
+                <p className="text-sm text-gray-500">
+                  No tenants found for this property.
+                </p>
+              </div>
+            </div>
+          )
+        }
       </div>
     </div>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
 import React, { useState } from "react";
 
 const ImagePreviews = ({ images }: ImagePreviewsProps) => {
@@ -24,7 +23,7 @@ const ImagePreviews = ({ images }: ImagePreviewsProps) => {
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
         >
-          <Image
+          <img
             src={image}
             alt={`Property Image ${index + 1}`}
             fill

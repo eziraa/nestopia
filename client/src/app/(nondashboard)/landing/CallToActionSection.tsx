@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -8,10 +7,9 @@ import Link from "next/link";
 const CallToActionSection = () => {
   return (
     <div className="relative py-24">
-      <Image
+      <img
         src="/landing-call-to-action.jpg"
         alt="Nestopia Search Section Background"
-        fill
         className="object-cover object-center"
       />
       <div className="absolute inset-0 bg-black bg-opacity-60"></div>

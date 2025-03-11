@@ -1,5 +1,4 @@
 import { Mail, MapPin, PhoneCall } from "lucide-react";
-import Image from "next/image";
 import React, { useState } from "react";
 
 const ApplicationCard = ({
@@ -26,7 +25,7 @@ const ApplicationCard = ({
       <div className="flex flex-col lg:flex-row  items-start lg:items-center justify-between px-6 md:px-4 py-6 gap-6 lg:gap-4">
         {/* Property Info Section */}
         <div className="flex flex-col lg:flex-row gap-5 w-full lg:w-auto">
-          <Image
+          <img
             src={imgSrc}
             alt={application.property.name}
             width={200}
@@ -95,7 +94,7 @@ const ApplicationCard = ({
           </div>
           <div className="flex gap-4">
             <div>
-              <Image
+              <img
                 src="/landing-i1.png"
                 alt={contactPerson.name}
                 width={40}

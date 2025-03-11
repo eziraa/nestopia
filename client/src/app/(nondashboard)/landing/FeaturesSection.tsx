@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import Link from "next/link";
 
 const containerVariants = {
@@ -83,7 +82,7 @@ const FeatureCard = ({
 }) => (
   <div className="text-center">
     <div className="p-4 rounded-lg mb-4 flex items-center justify-center h-48">
-      <Image
+      <img
         src={imageSrc}
         width={400}
         height={400}

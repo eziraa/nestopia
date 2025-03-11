@@ -7,21 +7,20 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "localhost",
         port: "5000",
-        pathname: "/api/uploads/**",
+        pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "example.com",
-        port: "",
         pathname: "/**",
       },
       {
         protocol: "https",
         hostname: "*.amazonaws.com",
-        port: "",
         pathname: "/**",
       },
     ],
+    domains: ["localhost"], // Add this line
   },
 };
 

@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 
 const containerVariants = {
   hidden: { opacity: 0 },
@@ -85,7 +84,7 @@ const DiscoverCard = ({
 }) => (
   <div className="px-4 py-12 shadow-lg rounded-lg bg-primary-50 md:h-72">
     <div className="bg-primary-700 p-[0.6rem] rounded-full mb-4 h-10 w-10 mx-auto">
-      <Image
+      <img
         src={imageSrc}
         width={30}
         height={30}

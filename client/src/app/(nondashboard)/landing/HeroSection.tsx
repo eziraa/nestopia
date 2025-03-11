@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import React from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
@@ -10,7 +9,7 @@ const HeroSection = () => {
 
   return (
     <div className="relative h-screen">
-      <Image
+      <img
         src="/landing-splash.jpg"
         alt="Nestopia Rental Platform Hero Section"
         fill
