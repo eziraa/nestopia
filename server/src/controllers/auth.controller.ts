@@ -66,7 +66,8 @@ export class AuthController {
 
       // Save user ID in session (if using sessions)
       req.user = {
-        id: newUser.id.toString(),
+        cognitoId: newUser.cognitoId,
+        id: newUser.id,
         email: newUser.email,
         role: role || Role.TENANT,
         name: newUser.name,
@@ -86,94 +87,119 @@ export class AuthController {
   /**
    * User Sign-In
    */
-  static async signin(req: Request, res: Response) {
+
+  static async signin(req: Request, res: Response):Promise<void> {
     try {
-      // Getting sign in payload
       const { email, password } = req.body;
 
-      // Validate email and password
       if (!email || !password) {
-        res.status(400).json({ message: "Email and password are required" });
-        return;
+         res.status(400).json({ message: "Email and password are required" });
+         return;
       }
 
-      // Find user by email
       let role = Role.MANAGER;
-      const hashedPassword = await bcrypt.hash(password, 10);
       let user = await prisma.manager.findFirst({ where: { email } });
+
       if (!user) {
         user = await prisma.tenant.findFirst({ where: { email } });
         role = Role.TENANT;
-        if (password === user?.password) {
-          user = await prisma.tenant.update({
-            where: { id: user?.id },
-            data: { password: hashedPassword },
-          });
-        }
-      } else {
-        if (password === user?.password) {
-          user = await prisma.manager.update({
-            where: { id: user?.id },
-            data: { password: hashedPassword },
-          });
-        }
       }
+
       if (!user) {
-        res.status(404).json({ message: "User not found" });
-        return;
+         res.status(404).json({ message: "User not found" });
+         return
       }
 
-      // Compare password
-      const isMatch = await bcrypt.compare(
-        password,
-        user.password || "password"
-      );
-      if (!isMatch) {
-        res.status(401).json({ message: "Invalid credentials" });
-        return;
-      }
-
-      // Generate JWT token
       if (!process.env.JWT_SECRET) {
-        throw new Error("JWT_SECRET is not defined");
-        return;
+        throw new Error("JWT secret is not defined");
       }
-      const token = jwt.sign(
-        {
-          id: user.id,
-          role: role,
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "1h",
-        }
-      );
+      
+      const isMatch = await bcrypt.compare(password, user.password!);
+      if (!isMatch) {
+         res.status(401).json({ message: "Invalid credentials" });
+         return;
+      }
+      if (!process.env.JWT_SECRET || !process.env.JWT_REFRESH_SECRET) {
+        throw new Error("JWT secrets are not defined");
+      }
 
-      // Set token in HTTP-only cookie
-      res.cookie("token", token, {
-        httpOnly: true, // Prevents client-side access
-        secure: process.env.NODE_ENV === "production", // Use secure cookies in production
-        sameSite: "strict", // CSRF protection
-        maxAge: 3600000, // 1 hour
+      // Generate Access Token (short-lived)
+      const accessToken = jwt.sign({ id: user.id, role }, process.env.JWT_SECRET, {
+        expiresIn: "15m",
       });
 
-      // Store user in session (or generate JWT)
-      req.user = { id: user.id.toString(),cognitoId: user.cognitoId, role: Role.NONE, email: user.email };
+      // Store access token in HTTP-only cookie
+      res.cookie("token", accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 15 * 60 * 1000, // 15 minutes
+      });
+
+      // Generate Refresh Token (long-lived)
+      const refreshToken = jwt.sign({ id: user.id }, process.env.JWT_REFRESH_SECRET, {
+        expiresIn: "7d",
+      });
+
+      // Store refresh token in HTTP-only cookie
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      });
 
       res.json({
         message: "Login successful",
+        accessToken,
         user: {
-          ...user,
+          id: user.id,
+          email: user.email,
+          role,
         },
       });
     } catch (error: any) {
       console.error("Signin Error:", error);
-      // Handle known Prisma errors
-      if (error.code === "ECONNREFUSED") {
-        res.status(503).json({
-          message: "Database connection failed. Please try again later.",
+      res.status(500).json({ message: "Internal Server Error" });
+    }
+  }
+
+  // Refresh Token Method
+  static async refreshToken(req: Request, res: Response) {
+    try {
+      const refreshToken = req.cookies.refreshToken;
+      if (!refreshToken) {
+        return res.status(401).json({ message: "No refresh token provided" });
+      }
+
+      if (!process.env.JWT_REFRESH_SECRET) {
+        throw new Error("JWT_REFRESH_SECRET is not defined");
+      }
+
+      jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET, async (err: any, decoded: any) => {
+        if (err) return res.status(403).json({ message: "Invalid refresh token" });
+
+        const user = await prisma.manager.findUnique({ where: { id: decoded.id } }) ||
+                     await prisma.tenant.findUnique({ where: { id: decoded.id } });
+
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
+        if(!process.env.JWT_SECRET){
+          res.json("JWT_SECRET is not defined")
+          return;
+        }
+        // Generate a new access token
+        const newAccessToken = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
+          expiresIn: "15m",
         });
-      } else res.status(500).json({ message: "Internal Server Error" });
+
+        res.json({ accessToken: newAccessToken });
+      });
+    } catch (error: any) {
+      console.error("Refresh Token Error:", error);
+      res.status(500).json({ message: "Internal Server Error" });
     }
   }
 
