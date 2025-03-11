@@ -12,6 +12,7 @@ const router = express.Router();
 router.get("/", PropertyController.listProperties);
 router.get("/:id", PropertyController.getProperty);
 router.get("/:id/leases", PropertyController.getPropertyLeases);
+router.get("/:id/payments", PropertyController.getPropertyPayments);
 router.post(
   "/",
   upload.array("photos"),

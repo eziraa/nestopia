@@ -229,7 +229,7 @@ export class ApplicationController {
           where: { id: application.propertyId },
           data: {
             tenants: {
-              connect: { id: Number(application.tenantCognitoId) },
+              connect: { cognitoId: application.tenantCognitoId },
             },
           },
         });
@@ -263,6 +263,7 @@ export class ApplicationController {
       // Sending the updated application details in response
       res.status(200).json(updatedApplication);
     } catch (error: any) {
+      console.log("@@UpdateApplicationStatusError", error);
       res.status(500).json({
         message: `Error updating application: ${error.message}`,
       });

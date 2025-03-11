@@ -302,4 +302,45 @@ export class PropertyController {
       console.log("@@GETTING LEASES ERROR: ", error);
     }
   }
+
+  static async getPropertyPayments(req: Request, res: Response): Promise<void> {
+    try {
+      
+      const { id } = req.params;
+      if (!id) {
+        res.status(400).json({ message: "Property ID is required" });
+        return;
+      }
+      
+
+      //Getting leases
+
+      const leases = await prisma.lease.findMany({
+        where:{
+          propertyId: Number(id)
+        }
+      })
+
+      if(!leases.length){
+        res.json({
+          message: "Leases not found associeted with this "
+        });
+        return;
+      }
+      const payments = await prisma.payment.findMany({
+        where: {
+          leaseId: {
+            in: [...leases.map(lease => lease.id)]
+          }
+        },
+        include:{
+          lease: true
+        }
+      })
+      res.json(payments);
+    } catch (error : any) {
+      res.status(500).json({ message: `Error fetching leases: ${error.message}` });
+      console.log("@@GETTING LEASES ERROR: ", error);
+    }
+  }
 }
