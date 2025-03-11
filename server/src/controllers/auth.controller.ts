@@ -97,8 +97,11 @@ export class AuthController {
          return;
       }
 
+   
+
       let role = Role.MANAGER;
       let user = await prisma.manager.findFirst({ where: { email } });
+
 
       if (!user) {
         user = await prisma.tenant.findFirst({ where: { email } });
@@ -108,6 +111,23 @@ export class AuthController {
       if (!user) {
          res.status(404).json({ message: "User not found" });
          return
+      }
+      if(user.password === 'password'){
+        const hashedPassword = await bcrypt.hash(password, 10);
+        if(user.role === Role.TENANT)
+          user = await prisma.tenant.update({
+            where: { id: user.id },
+            data: {
+              password: hashedPassword,
+            },
+          });
+        else
+        user = await prisma.manager.update({
+          where: { id: user.id },
+          data: {
+            password: hashedPassword,
+          },
+        });
       }
 
       if (!process.env.JWT_SECRET) {
