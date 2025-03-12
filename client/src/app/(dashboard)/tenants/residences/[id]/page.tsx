@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/table";
 import {
   useGetLeasesQuery,
-  useGetPaymentsQuery,
+  useGetLeasePaymentsQuery ,
   useGetPropertyQuery,
 } from "@/state/api";
 import { useAppSelector } from "@/state/redux";
@@ -239,7 +239,7 @@ const Residence = () => {
     parseInt(authUser?.id || "0"),
     { skip: !authUser?.id }
   );
-  const { data: payments, isLoading: paymentsLoading } = useGetPaymentsQuery(
+  const { data: payments, isLoading: paymentsLoading } = useGetLeasePaymentsQuery (
     leases?.[0]?.id || 0,
     { skip: !leases?.[0]?.id }
   );

@@ -1,15 +1,19 @@
 "use client";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css";
 import { useAppSelector } from "@/state/redux";
 import { useGetPropertiesQuery } from "@/state/api";
 import { Property } from "@/types/prismaTypes";
+import Loading from "@/components/Loading";
+import ErrorPage from "@/components/ErrorPage";
+import MapComponent, { LocationProps } from "./MapCom";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
 
+interface Marker extends LocationProps{}
 const Map = () => {
-  const mapContainerRef = useRef(null);
+  const [markers, setMarkers] = useState<Marker[]>([]);
   const filters = useAppSelector((state) => state.global.filters);
   const {
     data: properties,
@@ -19,41 +23,31 @@ const Map = () => {
 
   useEffect(() => {
     if (isLoading || isError || !properties) return;
+    if(!!properties){
+      const newMarkers = properties.map((property) => {
+        return {
+          location: [
+             +(property.location.coordinates.longitude),
+             +(property.location.coordinates.latitude),
+          ],
+          name: property.name,
+          price: property.pricePerMonth,
+          id: property.id,
+        };
+      });
+    
+      setMarkers(newMarkers);
+    }
 
-    const map = new mapboxgl.Map({
-      container: mapContainerRef.current!,
-      style: "mapbox://styles/majesticglue/cm6u301pq008b01sl7yk1cnvb",
-      center: filters.coordinates || [-74.5, 40],
-      zoom: 9,
-    });
-
-    properties.forEach((property) => {
-      const marker = createPropertyMarker(property, map);
-      const markerElement = marker.getElement();
-      const path = markerElement.querySelector("path[fill='#3FB1CE']");
-      if (path) path.setAttribute("fill", "#000000");
-    });
-
-    const resizeMap = () => {
-      if (map) setTimeout(() => map.resize(), 700);
-    };
-    resizeMap();
-
-    return () => map.remove();
   }, [isLoading, isError, properties, filters.coordinates]);
 
-  if (isLoading) return <>Loading...</>;
-  if (isError || !properties) return <div>Failed to fetch properties</div>;
+  if (isLoading) return <Loading/>;
+  if (isError || !properties) return <ErrorPage title="Error to fetch properties location"/>;
 
   return (
     <div className="basis-5/12 grow relative rounded-xl">
-      <div
-        className="map-container rounded-xl"
-        ref={mapContainerRef}
-        style={{
-          height: "100%",
-          width: "100%",
-        }}
+      <MapComponent
+        markers={[]}
       />
     </div>
   );
