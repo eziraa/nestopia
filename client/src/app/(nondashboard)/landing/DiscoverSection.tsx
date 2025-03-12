@@ -45,19 +45,19 @@ const DiscoverSection = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-12 xl:gap-16 text-center">
           {[
             {
-              imageSrc: "/landing-icon-wand.png",
+              imageSrc: "/landing-search-icon.png",
               title: "Search for Properties",
               description:
                 "Browse through our extensive collection of rental properties in your desired location.",
             },
             {
-              imageSrc: "/landing-icon-calendar.png",
+              imageSrc: "/landing-calendar-icon.png",
               title: "Book Your Rental",
               description:
                 "Once you've found the perfect rental property, easily book it online with just a few clicks.",
             },
             {
-              imageSrc: "/landing-icon-heart.png",
+              imageSrc: "/landing-home-icon.png",
               title: "Enjoy your New Home",
               description:
                 "Move into your new rental property and start enjoying your dream home.",
@@ -83,12 +83,12 @@ const DiscoverCard = ({
   description: string;
 }) => (
   <div className="px-4 py-12 shadow-lg rounded-lg bg-primary-50 md:h-72">
-    <div className="bg-primary-700 p-[0.6rem] rounded-full mb-4 h-10 w-10 mx-auto">
+    <div className=" p-[0.6rem] mb-4 h-24 w-24 mx-auto">
       <img
         src={imageSrc}
         width={30}
         height={30}
-        className="w-full h-full"
+        className="w-full h-full "
         alt={title}
       />
     </div>

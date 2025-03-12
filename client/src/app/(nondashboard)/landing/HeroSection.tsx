@@ -1,56 +1,127 @@
 "use client";
 
-import React from "react";
+import Image from "next/image";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
+const properties = [
+  {
+    image: "/landing-i1.png",
+    title: "Find Your Dream Home",
+    description: "Discover amazing rental houses with stunning views and modern amenities."
+  },
+  {
+    image: "/landing-i2.png",
+    title: "Luxury Apartments Await",
+    description: "Explore high-end apartments in prime locations that suit your lifestyle."
+  },
+  {
+    image: "/landing-i3.png",
+    title: "Cozy and Affordable Spaces",
+    description: "Browse budget-friendly rental homes with great comfort and convenience."
+  }
+];
+
 const HeroSection = () => {
+  const [selectedProperty, setSelectedProperty] = useState(properties[0]);
 
   return (
-    <div className="relative h-screen">
-      <img
-        src="/landing-splash.jpg"
-        alt="Nestopia Rental Platform Hero Section"
-        fill
-        className="object-cover object-center"
-        priority
-      />
-      <div className="absolute inset-0 bg-black bg-opacity-60"></div>
+    <div className="relative h-screen  flex flex-col md:flex-row items-center justify-between px-10 md:px-32">
+      
+      {/* Left Side - Hero Text */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="absolute top-1/3 transform -translate-x-1/2 -translate-y-1/2 text-center w-full"
+        className="w-full relative md:w-1/2 text-center md:text-left space-y-6"
       >
-        <div className="max-w-4xl mx-auto px-16 sm:px-12">
-          <h1 className="text-5xl font-bold text-white mb-4">
-            Start your journey to finding the perfect place to call home
-          </h1>
-          <p className="text-xl text-white mb-8">
-            Explore our wide range of rental properties tailored to fit your
-            lifestyle and needs!
-          </p>
 
-          <div className="flex justify-center">
-            <Input
-              type="text"
-              value={""}
-              onChange={(e) => { }}
-              placeholder="Search by city, neighborhood or address"
-              className="w-full max-w-lg rounded-none rounded-l-xl border-none bg-white h-12"
-            />
-            <Button
-              onClick={() => { }}
-              className="bg-secondary-500 text-white rounded-none rounded-r-xl border-none hover:bg-secondary-600 h-12"
-            >
-              Search
-            </Button>
-          </div>
+        <Lines className="right-4 top-2"/>
+        {/* Motto Title */}
+        <h3 className="text-lg font-semibold text-secondary-300 uppercase tracking-wide">
+          Your Dream Home, Just a Click Away
+        </h3>
+
+        {/* Main Heading */}
+        <h1 className="text-5xl font-bold text-slate-700 leading-tight">
+          {selectedProperty.title}
+        </h1>
+
+        {/* Description Paragraph */}
+        <p className="text-lg text-gray-700">
+          Finding the perfect home should be **exciting, not stressful**. Whether you’re looking for a **cozy apartment**, a **luxury villa**, or a **budget-friendly rental**, we’ve got you covered. Explore handpicked properties with **detailed insights** to make the best decision for your lifestyle.
+        </p>
+
+        {/* Additional Highlighted Feature */}
+        <p className="text-md text-secondary-400 italic">
+           {['Verified Listings' , 'Virtual Tours', 'Instant Bookings', '24/7 Support'].map((feature, index) => (
+            <span key={index} className="inline-block bg-secondary-100 text-secondary-500 px-2 py-1 rounded-full m-1">
+              {feature}
+            </span>
+          ))}
+        </p>
+
+        {/* Search Bar */}
+        <div className="flex justify-center md:justify-start">
+          <Input
+            type="text"
+            placeholder="Search by city, neighborhood, or address"
+            className="w-full max-w-lg rounded-none rounded-l-xl border-none bg-white h-12 text-gray-700 px-4 shadow-md"
+          />
+          <Button className="bg-secondary-500 text-white rounded-none rounded-r-xl border-none hover:bg-secondary-600 h-12 px-6 shadow-lg">
+            Search
+          </Button>
         </div>
+        <Lines  className="left-4 -bottom-20"/>
       </motion.div>
+
+
+      {/* Right Side - Interactive Image */}
+      <div className="relative w-full md:w-[500px] h-[450px] flex flex-col gap-4 items-center">
+        <Image
+          src={selectedProperty.image}
+          alt="Selected Rental Property"
+          className="object-cover object-center rounded-xl shadow-lg"
+          priority
+          width={500}
+          height={450}
+        />
+
+        {/* Property Selector */}
+        <div className="flex gap-2 ">
+          {properties.map((property, index) => (
+            <button
+              key={index}
+              onClick={() => setSelectedProperty(property)}
+              className={`w-16 h-16 border-2 rounded-md overflow-hidden ${
+                selectedProperty.image === property.image ? "border-secondary-500" : "border-gray-300"
+              }`}
+            >
+              <Image
+                src={property.image}
+                alt={`Property ${index + 1}`}
+                width={64}
+                height={64}
+                className="object-cover"
+              />
+            </button>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
+
+const Lines = ({className}: {className: string}) =>{
+  return (
+    <div className={"flex absolute   items-center  justify-center p-4" + " " + className}>
+      <span className="w-32 h-4 absolute  rounded-[10px] bg-blue-600/80 -rotate-[45deg]"></span>
+      <span className="w-32 h-4 absolute  left-4 rounded-[10px] bg-red-600/80 -rotate-[45deg]"></span>
+      <span className="w-32 h-4 absolute  left-20  rounded-[10px] bg-yellow-600/80 -rotate-[45deg]"></span>
+    </div>
+  )
+}
 
 export default HeroSection;
