@@ -11,12 +11,13 @@ interface DecodedToken extends JwtPayload {
 }
 
 interface User {
-  id: number;
+  id?: number;
   role: Role;
   password?: string;
   name?: string;
   email?: string;
   phoneNumber?: string;
+  cognitoId:string
 }
 
 declare global {
@@ -34,7 +35,7 @@ const generateAccessToken = (user: User): string => {
     throw new Error("JWT secret is not defined");
   }
   return jwt.sign(
-    { id: user.id, role: user.role },
+    { id: user.cognitoId, role: user.role },
     process.env.JWT_SECRET,
     { expiresIn: "15m" } // Short lifespan for access token
   );
@@ -92,7 +93,7 @@ const verifyAndRefreshToken = async (req: Request, res: Response) => {
         return null;
       }
 
-      const newAccessToken = generateAccessToken({ id: user.id, role });
+      const newAccessToken = generateAccessToken({ cognitoId: user.cognitoId, role });
 
       res.cookie("token", newAccessToken, {
         httpOnly: true,

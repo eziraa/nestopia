@@ -25,7 +25,7 @@ export const AuthApi = createApi({
         method: "POST",
         body: {
           ...body,
-          role: Role.Manager,
+          role: body.role || Role.Manager,
         },
       }),
       invalidatesTags: [AuthTagsEnum.SIGNUP],

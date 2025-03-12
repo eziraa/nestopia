@@ -11,6 +11,8 @@ export class ApplicationController {
       //getting query parameteres
       const { userId, role } = req.query as { userId: string; role: Role };
 
+      console.log("@@User ID", userId);
+      console.log("@@Role", role);
       //prepate conditions
       let whereClause = {};
       if (userId && role) {
@@ -29,9 +31,9 @@ export class ApplicationController {
 
       //getting applications
       const application = await prisma.application.findMany({
-        where: {},
+        where: whereClause,
         include: {
-          property: {
+          property: { 
             include: {
               location: true,
               manager: true,

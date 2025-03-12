@@ -63,12 +63,14 @@ export class TenantController {
           name,
           email,
           phoneNumber,
+          cognitoId: id
         },
       });
 
       // Sending response
       res.json(updatedTenant);
     } catch (error: any) {
+      console.log("@@Error Updating tenant", error);
       res.status(500).json({
         message: `Error updating tenant ${error.message}`,
       });
@@ -89,6 +91,9 @@ export class TenantController {
       //Getting tenant
       const tenant = await prisma.tenant.findUnique({
         where: { id: Number(id) },
+        include:{
+          favorites: true
+        }
       });
 
       // throw error if tenant is not found

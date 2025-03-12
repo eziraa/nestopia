@@ -10,9 +10,11 @@ const upload = multer({ storage: storage });
 const router = express.Router();
 
 router.get("/", PropertyController.listProperties);
+router.get("/popular", PropertyController.popular);
 router.get("/:id", PropertyController.getProperty);
 router.get("/:id/leases", PropertyController.getPropertyLeases);
 router.get("/:id/payments", PropertyController.getPropertyPayments);
+
 router.post(
   "/",
   upload.array("photos"),

@@ -225,6 +225,16 @@ export const api = createApi({
       },
     }),
 
+    getLeasePayments: build.query<Payment[], number>({
+      query: (leaseId) => `leases/${leaseId}/payments`,
+      providesTags: [ApiTags.PAYMENTS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        await withToast(queryFulfilled, {
+          error: "Failed to fetch lease payments.",
+        });
+      },
+    }),
+
     getPropertyPayments: build.query<Payment[], number>({
       query: (propertyId) => `properties/${propertyId}/payments`,
       providesTags: [ApiTags.PAYMENTS],
@@ -291,6 +301,12 @@ export const api = createApi({
         });
       },
     }),
+    getPopularHouses: build.query<Property[], void>({
+      query:( ) => `properties/popular`,
+      providesTags: (result) => {
+        return result ? result.map(({ id }) => ({ type: ApiTags.PROPERTIES, id })) : []
+      }
+    })
   }),
 });
 
@@ -311,4 +327,6 @@ export const {
   useGetApplicationsQuery,
   useUpdateApplicationStatusMutation,
   useCreatePropertyMutation,
+  useGetLeasePaymentsQuery,
+  useGetPopularHousesQuery
 } = api;

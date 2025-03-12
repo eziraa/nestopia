@@ -15,4 +15,5 @@ export interface SignupRequest extends LoginRequest {
   name: string;
   confirmpassword: string;
   phoneNumber: string;
+  role: string;
 }

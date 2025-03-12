@@ -343,4 +343,22 @@ export class PropertyController {
       console.log("@@GETTING LEASES ERROR: ", error);
     }
   }
+
+  static async popular(req: Request, res: Response): Promise<void>{
+    try {
+      const properties = await prisma.property.findMany({
+        take: 4,
+        orderBy: {
+          averageRating: "desc"
+        },
+        include:{
+          location: true
+        }
+      });
+      res.json(properties);
+    } catch (error: any) {
+      res.status(500).json({ message: `Error fetching popular properties: ${error.message}` });
+      console.log("@@Error getting popular houses")
+    }
+  }
 }
