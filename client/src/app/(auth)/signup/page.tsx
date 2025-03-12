@@ -7,6 +7,7 @@ import { forwardRef, useState } from "react";
 import { useSignupMutation } from "@/state/auth.api";
 import { toast } from "sonner";
 import { SignupRequest } from "@/types/authTypes";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 
 
@@ -14,6 +15,7 @@ export default function SignUp() {
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm<SignupRequest>({
     });
@@ -46,7 +48,7 @@ export default function SignUp() {
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <div className="w-full flex flex-col py-10 px-6 gap-4 max-w-md bg-white p-6 rounded-lg shadow-lg">
+            <div className="w-full flex flex-col p-10 gap-4 max-w-md bg-white  rounded-lg shadow-lg">
                 <div className="flex items-center space-x-2">
                     <img className="w-12 h-12 border-2 rounded-full border-red-500 bg-red-300" src="/logo.svg" alt="Logo" />
                     <h1 className="text-2xl text-slate-700 font-bold">NESTO<span className="text-secondary-400">PIA</span> </h1>
@@ -90,6 +92,40 @@ export default function SignUp() {
                     />
                     {errors.confirmpassword && (
                         <p className="text-red-500 text-sm">{errors.confirmpassword.message}</p>
+                    )}
+                     <Select
+                                {...register("role", { required: "Role is required" })}
+                                onValueChange={(value) => {
+                                    setValue("role", value);
+                                                                }                                }
+                              >
+                                <SelectTrigger
+                                  
+                                  className={`w-full border-gray-200 p-4 `}
+                                >
+                                  <SelectValue placeholder={"Please select your role"} />
+                                </SelectTrigger>
+                                <SelectContent  className="w-full border-gray-200 shadow">
+                                  {[{
+                                    value: "manager",
+                                    label: "Manager",
+                                },{
+                                    value: "tenant",
+                                    label: "Tenant",
+                                }]?.map((option) => (
+                                                <SelectItem
+                                                key={option.value}
+                                                value={option.value}
+                                                className={`cursor-pointer hover:!bg-gray-100 hover:!text-customgreys-darkGrey`}
+                                                >
+                                                {option.label}
+                                                </SelectItem>
+                                            ))}
+                                </SelectContent>
+                              </Select>
+                 
+                              {errors.role && (
+                        <p className="text-red-500 text-sm">{errors.role.message}</p>
                     )}
 
                     <button type="submit" className="w-full p-2 bg-secondary-400/90 hover:bg-secondary-400 text-white rounded">
