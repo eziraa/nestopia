@@ -2,7 +2,7 @@
 
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState } from "react";
-
+import Image from 'next/image';
 const ImagePreviews = ({ images }: ImagePreviewsProps) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
@@ -23,7 +23,10 @@ const ImagePreviews = ({ images }: ImagePreviewsProps) => {
             index === currentImageIndex ? "opacity-100" : "opacity-0"
           }`}
         >
-          <img
+          <span className="ml-48 text-red-600"> {image}</span>
+          <Image
+          fill
+          priority
             src={image}
             alt={`Property Image ${index + 1}`}
             className="object-cover cursor-pointer transition-transform duration-500 ease-in-out"

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import React from "react";
+import Image from "next/image";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFacebook,
@@ -14,7 +15,14 @@ const FooterSection = () => {
     <footer className="border-t border-gray-200 py-20">
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
-          <div className="mb-4">
+          <div className="mb-4 flex items-center gap-4">
+            <Image
+              src="/logo.png"
+              alt="Nestopia Logo"
+              width={100}
+              height={100}
+              className="border border-blue-700 rounded-full"
+            />
             <Link href="/" className="text-xl font-bold" scroll={false}>
               Nestopia
             </Link>

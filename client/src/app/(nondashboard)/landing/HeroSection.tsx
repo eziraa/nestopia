@@ -3,8 +3,8 @@
 import Image from "next/image";
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
 
 const properties = [
   {
@@ -25,6 +25,7 @@ const properties = [
 ];
 
 const HeroSection = () => {
+  const router = useRouter();
   const [selectedProperty, setSelectedProperty] = useState(properties[0]);
 
   return (
@@ -51,7 +52,7 @@ const HeroSection = () => {
 
         {/* Description Paragraph */}
         <p className="text-lg text-gray-700">
-          Finding the perfect home should be **exciting, not stressful**. Whether you’re looking for a **cozy apartment**, a **luxury villa**, or a **budget-friendly rental**, we’ve got you covered. Explore handpicked properties with **detailed insights** to make the best decision for your lifestyle.
+          Finding the perfect home should be <span className="text-blue-800 hover:underline font-semibold italic">exciting, not stressful</span> . Whether you’re looking for a <span className="text-blue-800 font-semibold italic hover:underline">cozy apartment,</span> a <span className="text-blue-800  hover:underline font-semibold italic">luxury villa</span> , or a <span className="text-blue-800 hover:underline font-semibold italic">budget-friendly rental</span>, we’ve got you covered. Explore handpicked properties with **detailed insights** to make the best decision for your lifestyle.
         </p>
 
         {/* Additional Highlighted Feature */}
@@ -65,13 +66,14 @@ const HeroSection = () => {
 
         {/* Search Bar */}
         <div className="flex justify-center md:justify-start">
-          <Input
-            type="text"
-            placeholder="Search by city, neighborhood, or address"
-            className="w-full max-w-lg rounded-none rounded-l-xl border-none bg-white h-12 text-gray-700 px-4 shadow-md"
-          />
-          <Button className="bg-secondary-500 text-white rounded-none rounded-r-xl border-none hover:bg-secondary-600 h-12 px-6 shadow-lg">
-            Search
+         
+          <Button 
+          className="bg-secondary-500 text-white  rounded-xl border-none hover:bg-secondary-600 h-12 px-6 shadow-lg"
+          onClick={()=>{
+            router.push('search')
+          }}
+          >
+            Discover your Home
           </Button>
         </div>
         <Lines  className="left-4 -bottom-20"/>

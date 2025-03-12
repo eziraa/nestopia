@@ -2,6 +2,7 @@
 
 import { NAVBAR_HEIGHT } from "@/lib/constants";
 import Link from "next/link";
+import Image from "next/image";
 import React from "react";
 import { Button } from "./ui/button";
 import { usePathname, useRouter } from "next/navigation";
@@ -59,13 +60,13 @@ const Navbar = () => {
             scroll={false}
           >
             <div className="flex items-center gap-3">
-              <img
-                src="/logo.svg"
-                alt="Rentiful Logo"
-                width={24}
-                height={24}
-                className="w-6 h-6"
-              />
+               <Image
+                  src="/logo.png"
+                  alt="Nestopia Logo"
+                  width={32}
+                  height={50}
+                  className="rounded-full"
+                />
               <div className="text-xl  font-bold">
                 NESTO
                 <span className="text-slate-900 font-light hover:!text-primary-300">
