@@ -75,11 +75,8 @@ const MapComponent = ({ markers, zoom = 11, center = [11.56650613942859, 37.3392
 
     return (
         <div className="h-full flex items-center justify-center w-full">
-            <pre>
-                {JSON.stringify(userPosition, null, 2)}
-            </pre>
 
-            <MapContainer className="h-[80vh] w-[75vw]" center={center} zoom={zoom} scrollWheelZoom={true}>
+            <MapContainer className="h-[80vh] w-[60vw]" center={center} zoom={zoom} scrollWheelZoom={true}>
                 <TileLayer
                     attribution='&copy; <a href="https://www.openstreetmap.fr/hot/copyright">OpenStreetMap</a> contributors'
                     url="https://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png"
