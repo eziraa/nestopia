@@ -90,6 +90,7 @@ export const api = createApi({
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           error: "Failed to fetch properties.",
+          success: "Properties loaded successfully!",
         });
       },
     }),

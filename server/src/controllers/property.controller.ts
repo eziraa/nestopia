@@ -73,10 +73,15 @@ export class PropertyController {
         );
       }
 
+
       if (amenities && amenities !== "any") {
         const amenitiesArray = (amenities as string).split(",");
-        whereConditions.push(Prisma.sql`p.amenities @> ${amenitiesArray}`);
+      
+        whereConditions.push(
+          Prisma.sql`ARRAY(SELECT unnest("amenities")::text) @> ARRAY[${Prisma.join(amenitiesArray)}]::text[]`
+        );
       }
+      
 
       if (availableFrom && availableFrom !== "any") {
         const availableFromDate =
@@ -138,6 +143,7 @@ export class PropertyController {
 
       res.json(properties);
     } catch (err: any) {
+      console.log("@@Error getting properties: ", err);
       res
         .status(500)
         .json({ message: `Error fetching properties: ${err.message}` });

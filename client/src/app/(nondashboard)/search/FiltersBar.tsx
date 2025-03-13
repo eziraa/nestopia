@@ -108,8 +108,8 @@ const FiltersBar = () => {
         <Button
           variant="outline"
           className={cn(
-            "gap-2 rounded-xl border-primary-400 hover:bg-primary-500 hover:text-primary-100",
-            isFiltersFullOpen && "bg-primary-700 text-primary-100"
+            "gap-2 rounded-xl border-blue-800 hover:bg-blue-700 hover:text-blue-100",
+            isFiltersFullOpen && "bg-blue-700 text-blue-100"
           )}
           onClick={() => dispatch(toggleFiltersFullOpen())}
         >
@@ -123,12 +123,12 @@ const FiltersBar = () => {
             placeholder="Search location"
             value={searchInput}
             onChange={(e) => setSearchInput(e.target.value)}
-            className="w-40 rounded-l-xl rounded-r-none border-primary-400 border-r-0"
+            className="w-40 rounded-l-xl rounded-r-none border-blue-700 border-r-0"
           />
           <Button
             onClick={handleLocationSearch}
-            className={`rounded-r-xl rounded-l-none border-l-none border-primary-400 shadow-none 
-              border hover:bg-primary-700 hover:text-primary-50`}
+            className={`rounded-r-xl rounded-l-none border-l-none border-blue-700 shadow-none 
+              border hover:bg-blue-700 hover:text-blue-50`}
           >
             <Search className="w-4 h-4" />
           </Button>
@@ -143,7 +143,7 @@ const FiltersBar = () => {
               handleFilterChange("priceRange", value, true)
             }
           >
-            <SelectTrigger className="w-22 rounded-xl border-primary-400">
+            <SelectTrigger className="w-22 rounded-xl border-blue-700">
               <SelectValue>
                 {formatPriceValue(filters.priceRange[0], true)}
               </SelectValue>
@@ -165,7 +165,7 @@ const FiltersBar = () => {
               handleFilterChange("priceRange", value, false)
             }
           >
-            <SelectTrigger className="w-22 rounded-xl border-primary-400">
+            <SelectTrigger className="w-22 rounded-xl border-blue-700">
               <SelectValue>
                 {formatPriceValue(filters.priceRange[1], false)}
               </SelectValue>
@@ -188,7 +188,7 @@ const FiltersBar = () => {
             value={filters.beds}
             onValueChange={(value) => handleFilterChange("beds", value, null)}
           >
-            <SelectTrigger className="w-26 rounded-xl border-primary-400">
+            <SelectTrigger className="w-26 rounded-xl border-blue-700">
               <SelectValue placeholder="Beds" />
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -205,7 +205,7 @@ const FiltersBar = () => {
             value={filters.baths}
             onValueChange={(value) => handleFilterChange("baths", value, null)}
           >
-            <SelectTrigger className="w-26 rounded-xl border-primary-400">
+            <SelectTrigger className="w-26 rounded-xl border-blue-700">
               <SelectValue placeholder="Baths" />
             </SelectTrigger>
             <SelectContent className="bg-white">
@@ -224,7 +224,7 @@ const FiltersBar = () => {
             handleFilterChange("propertyType", value, null)
           }
         >
-          <SelectTrigger className="w-32 rounded-xl border-primary-400">
+          <SelectTrigger className="w-32 rounded-xl border-blue-700">
             <SelectValue placeholder="Home Type" />
           </SelectTrigger>
           <SelectContent className="bg-white">
@@ -241,7 +241,7 @@ const FiltersBar = () => {
         </Select>
 
         <Button
-        className="rounded-xl border-primary-400 hover:bg-primary-700 hover:text-primary-50"
+        className="rounded-xl border-primary-700 hover:bg-primary-200 "
         onClick={() =>{
           dispatch(setFilters({}))
           updateURL(null)
@@ -257,8 +257,8 @@ const FiltersBar = () => {
           <Button
             variant="ghost"
             className={cn(
-              "px-3 py-1 rounded-none rounded-l-xl hover:bg-primary-600 hover:text-primary-50",
-              viewMode === "list" ? "bg-primary-700 text-primary-50" : ""
+              "px-3 py-1 rounded-none rounded-l-xl hover:bg-blue-600 hover:text-blue-50",
+              viewMode === "list" ? "bg-blue-700 text-blue-50" : ""
             )}
             onClick={() => dispatch(setViewMode("list"))}
           >
@@ -267,8 +267,8 @@ const FiltersBar = () => {
           <Button
             variant="ghost"
             className={cn(
-              "px-3 py-1 rounded-none rounded-r-xl hover:bg-primary-600 hover:text-primary-50",
-              viewMode === "grid" ? "bg-primary-700 text-primary-50" : ""
+              "px-3 py-1 rounded-none rounded-r-xl hover:bg-blue-600 hover:text-blue-50",
+              viewMode === "grid" ? "bg-blue-700 text-blue-50" : ""
             )}
             onClick={() => dispatch(setViewMode("grid"))}
           >

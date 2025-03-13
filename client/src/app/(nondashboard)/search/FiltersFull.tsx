@@ -105,11 +105,11 @@ const FiltersFull = () => {
                   location: e.target.value,
                 }))
               }
-              className="rounded-l-xl rounded-r-none border-r-0"
+              className="rounded-l-xl rounded-r-none border-r-0 border-blue-700"
             />
             <Button
               onClick={handleLocationSearch}
-              className="rounded-r-xl rounded-l-none border-l-none border-black shadow-none border hover:bg-primary-700 hover:text-primary-50"
+              className="rounded-r-xl rounded-l-none border-l-none border-blue-700 shadow-none border hover:bg-blue-700 hover:text-blue-50"
             >
               <Search className="w-4 h-4" />
             </Button>
@@ -126,7 +126,7 @@ const FiltersFull = () => {
                 className={cn(
                   "flex flex-col items-center justify-center p-4 border rounded-xl cursor-pointer",
                   localFilters.propertyType === type
-                    ? "border-black"
+                    ? "border-blue-700"
                     : "border-gray-200"
                 )}
                 onClick={() =>
@@ -150,6 +150,7 @@ const FiltersFull = () => {
             min={0}
             max={10000}
             step={100}
+            className="border border-blue-700 rounded-[5px]"
             value={[
               localFilters.priceRange[0] ?? 0,
               localFilters.priceRange[1] ?? 10000,
@@ -227,7 +228,7 @@ const FiltersFull = () => {
                 squareFeet: value as [number, number],
               }))
             }
-            className="[&>.bar]:bg-primary-700"
+            className="border border-blue-700 rounded-[5px]"
           />
           <div className="flex justify-between mt-2">
             <span>{localFilters.squareFeet[0] ?? 0} sq ft</span>
@@ -245,7 +246,7 @@ const FiltersFull = () => {
                 className={cn(
                   "flex items-center space-x-2 p-2 border rounded-lg hover:cursor-pointer",
                   localFilters.amenities.includes(amenity as AmenityEnum)
-                    ? "border-black"
+                    ? "border-blue-700"
                     : "border-gray-200"
                 )}
                 onClick={() => handleAmenityChange(amenity as AmenityEnum)}
@@ -283,7 +284,7 @@ const FiltersFull = () => {
         <div className="flex gap-4 mt-6">
           <Button
             onClick={handleSubmit}
-            className="flex-1 bg-primary-700 text-white rounded-xl"
+            className="flex-1 bg-blue-700 text-white rounded-xl"
           >
             APPLY
           </Button>
