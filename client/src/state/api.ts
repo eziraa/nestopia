@@ -90,7 +90,6 @@ export const api = createApi({
       async onQueryStarted(_, { queryFulfilled }) {
         await withToast(queryFulfilled, {
           error: "Failed to fetch properties.",
-          success: "Properties loaded successfully!",
         });
       },
     }),
@@ -150,6 +149,8 @@ export const api = createApi({
         await withToast(queryFulfilled, {
           success: "Added to favorites!!",
           error: "Failed to add to favorites",
+          loading: "Adding to favorites...",
+          toastID: "add-favorite",
         });
       },
     }),
@@ -170,6 +171,8 @@ export const api = createApi({
         await withToast(queryFulfilled, {
           success: "Removed from favorites!",
           error: "Failed to remove from favorites.",
+          loading: "Removing from favorites...",
+          toastID: "remove-favorite"
         });
       },
     }),

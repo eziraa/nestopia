@@ -11,14 +11,13 @@ import React from "react";
 import CardCompact from "@/components/CardCompact";
 import { toast } from "sonner";
 
-
 const Listings = () => {
   const user = useAppSelector(state => state.auth.user);
   
   const { data: tenant } = useGetTenantQuery(
-    user?.id || "",
+    user?.cognitoId || "",
     {
-      skip: !!user?.id,
+      skip: !user?.cognitoId,
     }
   );
   const [addFavorite] = useAddFavoritePropertyMutation();
@@ -32,7 +31,7 @@ const Listings = () => {
     isError,
   } = useGetPropertiesQuery(filters);
   const handleFavoriteToggle = async (propertyId: number) => {
-    toast.loading("Updating favorites...");
+
     if (!user) {
       toast.error("You must be logged in to add favorites");
       return;
@@ -46,12 +45,12 @@ const Listings = () => {
       await removeFavorite({
         cognitoId: user.cognitoId,
         propertyId,
-      });
+      }).unwrap();
     } else {
       await addFavorite({
         cognitoId: user.cognitoId,
         propertyId,
-      });
+      }).unwrap();
     }
   };
 
@@ -78,7 +77,7 @@ const Listings = () => {
                     (fav: Property) => fav.id === property.id
                   ) || false
                 }
-                onFavoriteToggle={() => handleFavoriteToggle}
+                onFavoriteToggle={() => handleFavoriteToggle(property.id)}
                 showFavoriteButton={!!user}
                 propertyLink={`/search/${property.id}`}
               />
@@ -91,7 +90,7 @@ const Listings = () => {
                     (fav: Property) => fav.id === property.id
                   ) || false
                 }
-                onFavoriteToggle={() => handleFavoriteToggle}
+                onFavoriteToggle={() => handleFavoriteToggle(property.id)}
                   showFavoriteButton={!!user}
                 propertyLink={`/search/${property.id}`}
               />

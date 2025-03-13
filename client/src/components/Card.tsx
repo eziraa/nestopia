@@ -56,7 +56,7 @@ const Card = ({
           {propertyLink ? (
             <Link
               href={propertyLink}
-              className="hover:underline hover:text-blue-600"
+              className="hover:underline  hover:text-blue-600"
               scroll={false}
             >
               {property.name}
@@ -65,7 +65,7 @@ const Card = ({
             property.name
           )}
         </h2>
-        <p className="text-gray-600 mb-2">
+        <p className=" mb-2">
           {property?.location?.address}, {property?.location?.city}
         </p>
         </div>

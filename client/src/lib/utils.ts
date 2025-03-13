@@ -35,22 +35,25 @@ export function cleanParams(params: Record<string, any>): Record<string, any> {
 
 type MutationMessages = {
   success?: string;
-  error: string;
+  error?: string;
+  loading?: string;
+  toastID?: string;
 };
 
 export const withToast = async <T>(
   mutationFn: Promise<T>,
   messages: Partial<MutationMessages>
 ) => {
-  const { success, error } = messages;
+  const { success, error , loading, toastID} = messages;
 
+  if(loading) toast.loading(loading, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
   try {
     const result = await mutationFn;
-    if (success) toast.success(success);
+    if (success) toast.success(success, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
     return result;
   } catch (err) {
     console.log(err)
-    if (error) toast.error(error);
+    if (error) toast.error(error, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
   }
 };
 
