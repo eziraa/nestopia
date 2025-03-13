@@ -49,11 +49,24 @@ export const withToast = async <T>(
   if(loading) toast.loading(loading, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
   try {
     const result = await mutationFn;
-    if (success) toast.success(success, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
+    if (success) toast.success(success, { 
+      id: toastID || crypto.getRandomValues(new Uint32Array(1))[0],
+      style: {
+        border: "1px solid #00FF00",
+        borderColor: '#d2ffd2c7',
+        color: '#00FF00'
+      }
+     },);
     return result;
   } catch (err) {
     console.log(err)
-    if (error) toast.error(error, { id: toastID || crypto.getRandomValues(new Uint32Array(1))[0] });
+    if (error) toast.error(error, { 
+      id: toastID || crypto.getRandomValues(new Uint32Array(1))[0],
+      style: {
+        backgroundColor: '#ffd2d2c7',
+        color: '#FF0000'
+      }
+     });
   }
 };
 
