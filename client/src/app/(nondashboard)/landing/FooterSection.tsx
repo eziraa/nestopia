@@ -21,7 +21,6 @@ const FooterSection = () => {
               alt="Nestopia Logo"
               width={100}
               height={100}
-              className="border border-blue-700 rounded-full"
             />
             <Link href="/" className="text-xl font-bold" scroll={false}>
               Nestopia

@@ -33,7 +33,11 @@ const FiltersBar = () => {
   const viewMode = useAppSelector((state) => state.global.viewMode);
   const [searchInput, setSearchInput] = useState(filters.location);
 
-  const updateURL = debounce((newFilters: FiltersState) => {
+  const updateURL = debounce((newFilters: FiltersState | null) => {
+    if(!newFilters) {
+      router.push(pathname);
+      return;
+    }
     const cleanFilters = cleanParams(newFilters);
     const updatedSearchParams = new URLSearchParams();
 
@@ -235,6 +239,16 @@ const FiltersBar = () => {
             ))}
           </SelectContent>
         </Select>
+
+        <Button
+        className="rounded-xl border-primary-400 hover:bg-primary-700 hover:text-primary-50"
+        onClick={() =>{
+          dispatch(setFilters({}))
+          updateURL(null)
+        }}
+        >
+          Clear filter
+        </Button>
       </div>
 
       {/* View Mode */}

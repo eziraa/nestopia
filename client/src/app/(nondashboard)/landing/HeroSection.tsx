@@ -13,12 +13,12 @@ const properties = [
     description: "Discover amazing rental houses with stunning views and modern amenities."
   },
   {
-    image: "/landing-i2.png",
+    image: "/placeholder.jpg",
     title: "Luxury Apartments Await",
     description: "Explore high-end apartments in prime locations that suit your lifestyle."
   },
   {
-    image: "/landing-i3.png",
+    image: "/placeholderr.jpg",
     title: "Cozy and Affordable Spaces",
     description: "Browse budget-friendly rental homes with great comfort and convenience."
   }
