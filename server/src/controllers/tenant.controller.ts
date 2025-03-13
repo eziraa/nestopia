@@ -80,17 +80,17 @@ export class TenantController {
   static async getTenenant(req: Request, res: Response): Promise<void> {
     try {
       // Getting tenant cognito id from request parameters
-      const { id } = req.params;
+      const { cognitoId } = req.params;
 
       // Throw error if cognito id is not provided
-      if (!id) {
+      if (!cognitoId) {
         res.status(400).json({ message: "Cognito ID is required" });
         return;
       }
 
       //Getting tenant
       const tenant = await prisma.tenant.findUnique({
-        where: { id: Number(id) },
+        where: { cognitoId: cognitoId },
         include:{
           favorites: true
         }
@@ -162,4 +162,73 @@ export class TenantController {
       });
     }
   }
+
+
+static async  addFavoriteProperty  (
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { cognitoId, propertyId } = req.params;
+    const tenant = await prisma.tenant.findUnique({
+      where: { cognitoId },
+      include: { favorites: true },
+    });
+
+    if (!tenant) {
+      res.status(404).json({ message: "Tenant not found" });
+      return;
+    }
+
+    const propertyIdNumber = Number(propertyId);
+    const existingFavorites = tenant.favorites || [];
+
+    if (!existingFavorites.some((fav) => fav.id === propertyIdNumber)) {
+      const updatedTenant = await prisma.tenant.update({
+        where: { cognitoId },
+        data: {
+          favorites: {
+            connect: { id: propertyIdNumber },
+          },
+        },
+        include: { favorites: true },
+      });
+      res.json(updatedTenant);
+    } else {
+      res.status(409).json({ message: "Property already added as favorite" });
+    }
+  } catch (error: any) {
+    console.log("@@Error Adding favorite property", error);
+    res
+      .status(500)
+      .json({ message: `Error adding favorite property: ${error.message}` });
+  }
+};
+
+static async removeFavoriteProperty   (
+  req: Request,
+  res: Response
+): Promise<void> {
+  try {
+    const { cognitoId, propertyId } = req.params;
+    const propertyIdNumber = Number(propertyId);
+
+    const updatedTenant = await prisma.tenant.update({
+      where: { cognitoId },
+      data: {
+        favorites: {
+          disconnect: { id: propertyIdNumber },
+        },
+      },
+      include: { favorites: true },
+    });
+
+    res.json(updatedTenant);
+  } catch (err: any) {
+    console.log("@@Error Removing favorite property", err);
+    res
+      .status(500)
+      .json({ message: `Error removing favorite property: ${err.message}` });
+  }
+};
 }
