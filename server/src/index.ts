@@ -40,7 +40,8 @@ const allowedOrigins = [
 
 app.use(
   cors({
-    origin: 'https://nestopia-five.vercel.app'
+    origin: 'https://nestopia-five.vercel.app',
+    credentials: true,
   })
 );
 
