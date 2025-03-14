@@ -20,12 +20,7 @@ Nestopia is a **modern house rental platform** built with **Next.js, Redux, Post
 ### **Backend**
 - **Node.js + Express.js** – REST API.
 - **PostgreSQL + Prisma ORM** – Database.
-- **Cloudinary/S3** – Image storage.
 
-### **DevOps & Deployment**
-- **Vercel** – Deploy frontend.
-- **Railway/Render** – Deploy backend & database.
-- **Docker** – Containerized environment.
 
 ## 🔧 Installation & Setup
 ### **1. Clone the Repository**
