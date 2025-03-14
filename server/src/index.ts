@@ -33,12 +33,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 /* CORS CONFIGURATION */
 
-app.use(cors());
 
 app.use(
   cors({
-    origin: 'https://nestopia-five.vercel.app',
-    credentials: true,
+    origin: "https://nestopia-five.vercel.app",
+    credentials: true, // Allows cookies & auth headers
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific HTTP methods
+    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
   })
 );
 
