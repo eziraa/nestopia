@@ -33,10 +33,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 /* CORS CONFIGURATION */
 
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://nestopia-five.vercel.app",
-];
+app.use(cors());
 
 app.use(
   cors({

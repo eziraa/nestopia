@@ -14,7 +14,6 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
   const authUser = useAppSelector(state => state.auth.user);
   const router = useRouter();
   const pathname = usePathname();
-  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     if (authUser)
@@ -26,10 +25,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
       )
       {
         router.push("/managers/properties", { scroll: false });
-      } else
-      {
-        setIsLoading(false);
-      }
+      } 
     }
   }, [authUser, router, pathname]);
 
