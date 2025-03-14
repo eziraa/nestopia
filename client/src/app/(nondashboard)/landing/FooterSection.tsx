@@ -12,7 +12,7 @@ import {
 
 const FooterSection = () => {
   return (
-    <footer className="border-t border-gray-200 py-20">
+    <footer className="border-t bg-blue-700 text-slate-50 border-gray-200 py-20">
       <div className="max-w-4xl mx-auto px-6 sm:px-8">
         <div className="flex flex-col md:flex-row justify-between items-center">
           <div className="mb-4 flex items-center gap-4">
@@ -21,6 +21,7 @@ const FooterSection = () => {
               alt="Nestopia Logo"
               width={100}
               height={100}
+              className="rounded-full"
             />
             <Link href="/" className="text-xl font-bold" scroll={false}>
               Nestopia
@@ -49,28 +50,28 @@ const FooterSection = () => {
             <a
               href="#"
               aria-label="Facebook"
-              className="hover:text-primary-600"
+              className="link_hover"
             >
               <FontAwesomeIcon icon={faFacebook} className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Instagram"
-              className="hover:text-primary-600"
+              className="link_hover"
             >
               <FontAwesomeIcon icon={faInstagram} className="h-6 w-6" />
             </a>
-            <a href="#" aria-label="Twitter" className="hover:text-primary-600">
+            <a href="#" aria-label="Twitter" className="link_hover">
               <FontAwesomeIcon icon={faTwitter} className="h-6 w-6" />
             </a>
             <a
               href="#"
               aria-label="Linkedin"
-              className="hover:text-primary-600"
+              className="link_hover"
             >
               <FontAwesomeIcon icon={faLinkedin} className="h-6 w-6" />
             </a>
-            <a href="#" aria-label="Youtube" className="hover:text-primary-600">
+            <a href="#" aria-label="Youtube" className="link_hover">
               <FontAwesomeIcon icon={faYoutube} className="h-6 w-6" />
             </a>
           </div>

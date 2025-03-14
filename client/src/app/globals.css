@@ -17,6 +17,14 @@ body,
   @apply text-sm;
   @apply bg-white;
   @apply dark:bg-black;
+
+}
+
+.link_hover{
+  @apply hover:underline;
+  @apply hover:text-blue-300;
+  @apply cursor-pointer;
+  @apply focus:outline-none;
 }
 
 @layer base {

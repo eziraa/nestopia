@@ -52,7 +52,7 @@ const HeroSection = () => {
 
         {/* Description Paragraph */}
         <p className="text-lg text-gray-700">
-          Finding the perfect home should be <span className="text-blue-800 hover:underline font-semibold italic">exciting, not stressful</span> . Whether you’re looking for a <span className="text-blue-800 font-semibold italic hover:underline">cozy apartment,</span> a <span className="text-blue-800  hover:underline font-semibold italic">luxury villa</span> , or a <span className="text-blue-800 hover:underline font-semibold italic">budget-friendly rental</span>, we’ve got you covered. Explore handpicked properties with **detailed insights** to make the best decision for your lifestyle.
+          Finding the perfect home should be <span className="text-blue-800 hover:underline font-semibold italic">exciting, not stressful</span> . Whether you’re looking for a <span className="text-blue-800 font-semibold italic hover:underline">cozy apartment,</span> a <span className="text-blue-800  hover:underline font-semibold italic">luxury villa</span> , or a <span className="text-blue-800 hover:underline font-semibold italic">budget-friendly rental</span>, we’ve got you covered. Explore handpicked properties with <span className="text-blue-800 font-semibold italic hover:underline">detailed insights</span> to make the best decision for your lifestyle.
         </p>
 
         {/* Additional Highlighted Feature */}
