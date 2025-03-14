@@ -4,7 +4,6 @@ import bodyParser from "body-parser";
 import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
-import session from "express-session";
 import { authMiddleware } from "./middleware/auth.middleware";
 /* ROUTE IMPORT */
 import authrouter from "./routes/auth.route";
@@ -33,13 +32,26 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
 /* CORS CONFIGURATION */
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://nestopia-five.vercel.app",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:3000", // Allow your frontend to make requests
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Allow cookies/authorization headers to be sent with requests
+    credentials: true,
   })
 );
+
 
 /* ROUTES */
 app.get("/api/", (req, res) => {
