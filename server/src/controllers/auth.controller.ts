@@ -100,7 +100,12 @@ export class AuthController {
       res.clearCookie("token",{
         httpOnly: true,
         secure: process.env.NODE_ENV === "production",
-        sameSite: "strict",
+        sameSite: "lax",
+        })
+      res.clearCookie("refreshToken",{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         })
 
       let role = Role.MANAGER;
@@ -170,11 +175,11 @@ export class AuthController {
       // Store refresh token in HTTP-only cookie
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: process.env.NODE_ENV === "production", // Set to true in production
         sameSite: "strict",
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
-
+      
 
       res.json({
         message: "Login successful",
