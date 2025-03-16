@@ -7,7 +7,7 @@ import { useGetPropertiesQuery } from "@/state/api";
 import { Property } from "@/types/prismaTypes";
 
 mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN as string;
-const mapboxStyleAccessToken = process.env.NEXT_PUBLIC_MAPBOX_STYLE_ACCESS_TOKEN;
+export const mapboxStyleAccessToken = process.env.NEXT_PUBLIC_MAPBOX_STYLE_ACCESS_TOKEN;
 
 const Map = () => {
   const mapContainerRef = useRef<HTMLDivElement>(null);
