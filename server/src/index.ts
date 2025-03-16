@@ -31,18 +31,11 @@ app.use(morgan("common"));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-/* CORS CONFIGURATION */
-
-
-app.use(
-  cors({
-    origin: "https://nestopia-five.vercel.app",
-    credentials: true, // Allows cookies & auth headers
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allow specific HTTP methods
-    allowedHeaders: ["Content-Type", "Authorization"], // Allow specific headers
-  })
-);
-
+app.use(cors({
+  origin: "https://nestopia-five.vercel.app", 
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"],
+}));
 
 /* ROUTES */
 app.get("/api/", (req, res) => {
